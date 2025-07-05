@@ -898,6 +898,10 @@ mp3/nuu1.mp3
 mp3/nuu2.mp3
 mp3/nuu3.mp3
 mp3/nuu4.mp3
+mp3/nuue1.mp3
+mp3/nuue2.mp3
+mp3/nuue3.mp3
+mp3/nuue4.mp3
 mp3/o1.mp3
 mp3/o2.mp3
 mp3/o3.mp3
