@@ -8,18 +8,13 @@
   "license": "MIT",
   "scripts": {
     "start": "tsc --outDir lib src/*.ts && cp src/typings.d.ts lib",
-    "prepublish": "npm run start",
-    "generate": "npm run start && node lib/generate_decks.js"
-  },
-  "devDependencies": {
-    "typescript": "^5.4.5"
+    "prepublish": "npm run start"
   },
   "dependencies": {
     "@types/node": "^9.4.6",
     "archiver": "^2.1.1",
-    "better-sqlite3": "^12.2.0",
+    "better-sqlite3": "^4.1.0",
     "rimraf": "^2.6.2",
-    "sha1": "^1.1.1",
-    "csv-parse": "^5.5.3"
+    "sha1": "^1.1.1"
   }
 }
