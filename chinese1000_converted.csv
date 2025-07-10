@@ -1,0 +1,845 @@
+simplified,pinyin,english_meaning,image_path,approved
+一,yī,one,,False
+在,zài,"in, at, on, etc.",,False
+有,yǒu,have,,False
+个,gè,piece,,False
+我,wǒ,"I, me, ego, self",,False
+不,bù,non,,False
+这,zhè,now,,False
+他,tā,"he, she, it, they (referring to inanimate things in object position)",,False
+也,yě,also,,False
+就,jiù,then,,False
+人,rén,person,,False
+都,dōu,all,,False
+说,shuō,speak,,False
+而,ér,conj.: and yet,,False
+们,men,plural marker for personal pronouns or for nouns referring to people,,False
+你,nǐ,you,,False
+了,le,particle: indicating new situation or completed action,,False
+要,yào,want,,False
+会,huì,to be able,,False
+对,duì,correct,,False
+及,jí,to reach,,False
+和,hé,and,,False
+与,yǔ,and,,False
+以,yǐ,using,,False
+很,hěn,pretty,,False
+种,zhǒng,m.[kind],,False
+的,de,particle: emphasizing an action/situation,,False
+大,dà,great,,False
+能,néng,can or to be capable of,,False
+着,zhe,[aspect],,False
+她,tā,she,,False
+那,nà,that,,False
+上,shàng,"on, above",,False
+但,dàn,conj.: but,,False
+年,nián,year,,False
+还,hái,still,,False
+可以,kěyǐ,can,,False
+最,zuì,most,,False
+自己,zìjǐ,lonesome,,False
+为,wéi,by,,False
+来,lái,come,,False
+所,suǒ,that which,,False
+他们,tāmen,they,,False
+两,liǎng,two,,False
+各,gè,each,,False
+可,kě,can,,False
+或,huò,conj.: or,,False
+好,hǎo,good,,False
+等,děng,conj.: and so on,,False
+又,yòu,again,,False
+将,jiāng,be about to,,False
+因为,yīnwèi,conj.: because,,False
+于,yú,"in, at, to, from, out of, by",,False
+由,yóu,from,,False
+从,cóng,from,,False
+更,gèng,more,,False
+被,bèi,by,,False
+才,cái,then and only then,,False
+已,yǐ,already,,False
+者,zhě,nominal suffix,,False
+每,měi,every,,False
+次,cì,order,,False
+把,bǎ,indicating pre-verbal object as thing dealt with by the action,,False
+三,sān,three,,False
+什么,shénme,anything,,False
+问题,wèntí,problem,,False
+其,qí,its,,False
+让,ràng,allow,,False
+此,cǐ,this,,False
+做,zuò,make,,False
+再,zài,again,,False
+所以,suǒyǐ,conj.: so,,False
+只,zhǐ,only,,False
+则,zé,then,,False
+台湾,Táiwān,Taiwan,,False
+却,què,however,,False
+并,bìng,to be side by side,,False
+位,wèi,location,,False
+想,xiǎng,think,,False
+去,qù,to go,,False
+呢,ne,particle: marking quesitons about subject already mentioned; indicating strong affirmation,,False
+学生,xuéshēng,academic,,False
+表示,biǎoshì,demonstrate,,False
+到,dào,up until,,False
+公司,gōngsī,place of business,,False
+如果,rúguǒ,conj.: if,,False
+社会,shèhuì,community,,False
+看,kàn,see,,False
+小,xiǎo,small,,False
+天,tiān,sky,,False
+因此,yīncǐ,conj.: therefore,,False
+新,xīn,new,,False
+但是,dànshì,conj.: but,,False
+它,tā,they (neologism for {1ta1}[3] [4]),,False
+中,zhōng,center,,False
+使,shǐ,rarefy,,False
+工作,gōngzuò,work,,False
+全,quán,all,,False
+觉得,juéde,imagine,,False
+使用,shǐyòng,use,,False
+这些,zhèxiē,these,,False
+里,lǐ,inside,,False
+由于,yóuyú,conj.: owing/due/thanks to,,False
+时候,shíhòu,day,,False
+知道,zhīdào,tell,,False
+这样,zhèyàng,"so, such, like this, this way",,False
+认为,rènwéi,find,,False
+时间,shíjiān,moment,,False
+事,shì,responsibility,,False
+过,guò,[aspect],,False
+向,xiàng,"to, towards",,False
+可能,kěnéng,probably,,False
+中国,Zhōngguó,Cathay,,False
+美国,Měiguó,House_of_Representatives,,False
+几,jǐ,how many,,False
+系统,xìtǒng,lineage,,False
+政府,zhèngfǔ,sirkar,,False
+大家,dàjiā,sundry,,False
+国家,guójiā,sirkar,,False
+许多,xǔduō,lot,,False
+生活,shēnghuó,life,,False
+跟,gēn,with,,False
+已经,yǐjīng,already,,False
+大学,dàxué,university,,False
+研究,yánjiù,study,,False
+因,yīn,conj.: because,,False
+本,běn,this,,False
+二,èr,two,,False
+活动,huódòng,activity,,False
+该,gāi,this,,False
+世界,shìjiè,mundane,,False
+应,yīng,should,,False
+四,sì,four,,False
+希望,xīwàng,hope,,False
+方式,fāngshì,path,,False
+内,nèi,inside,,False
+项,xiàng,m.[general],,False
+啊,ā,particle: used in direct address and exclamation; indicating obviousness/impatience/suggestion; used for confirmation,,False
+下,xià,under (condition/fact etc.),,False
+环境,huánjìng,circumambiency,,False
+一些,yīxiē,some,,False
+必须,bìxū,must,,False
+文化,wénhuà,civilization,,False
+高,gāo,tall,,False
+孩子,háizi,kid,,False
+没有,méiyǒu,not have,,False
+不能,bùnéng,must/may/can not,,False
+如,rú,according to,,False
+开始,kāishǐ,begin,,False
+元,yuán,m.[standard],,False
+不同,bùtóng,different,,False
+仍,réng,yet,,False
+网路,wǎnglù,WWW,,False
+日本,rìběn,Nippon,,False
+用,yòng,with,,False
+中心,zhōngxīn,center,,False
+虽然,suīrán,conj.: though,,False
+重要,zhòngyào,important,,False
+地方,dìfāng,country,,False
+进行,jìnxíng,be in progress,,False
+关系,guānxì,relation,,False
+市场,shìchǎng,bourse,,False
+太,tài,excessively,,False
+老师,lǎoshī,rabbi,,False
+提供,tígōng,feed,,False
+学校,xuéxiào,seminary,,False
+应该,yīnggāi,should,,False
+指出,zhǐchū,point,,False
+经济,jīngjì,economy,,False
+其他,qítā,others,,False
+家,jiā,family,,False
+发展,fāzhǎn,develop,,False
+教育,jiàoyū,education,,False
+成为,chéngwéi,find,,False
+多,duō,many,,False
+非常,fēicháng,extraordinary,,False
+便,biàn,as early as,,False
+方面,fāngmiàn,side,,False
+很多,hěnduō,,,False
+吃,chī,feed,,False
+然后,ránhòu,therewith,,False
+未,wèi,or not (at end of sentence),,False
+发现,fāxiàn,find,,False
+电脑,diànnǎo,electronic computer,,False
+一样,yīyàng,same,,False
+而且,érqiě,conj.: furthermore,,False
+心,xīn,heart,,False
+不过,búguò,conj.: but,,False
+无法,wúfǎ,nohow,,False
+企业,qǐyè,proposition,,False
+正,zhèng,precisely,,False
+服务,fúwù,be in the service of,,False
+较,jiào,rather,,False
+不会,búhuì,won't,,False
+曾,céng,once,,False
+吗,mā,particle: calling for agreement or disagreement,,False
+空间,kōngjiān,elbow room,,False
+看到,kàndào,view,,False
+五,wǔ,five,,False
+如何,rúhé,how,,False
+国内,guónèi,interior (of country),,False
+无,wú,not have,,False
+对于,duìyú,in regard) to,,False
+以及,yǐjí,conj.: as well as,,False
+之后,zhīhòu,later,,False
+可是,kěshì,conj.: but,,False
+当,dāng,when,,False
+人员,rényuán,strength,,False
+比,bǐ,compared with,,False
+先,xiān,earlier,,False
+产品,chǎnpǐn,baby,,False
+资讯,zīxùn,stuff,,False
+资料,zīliào,food,,False
+比较,bǐjiào,relatively,,False
+先生,xiānshēng,doctor of Chinese medicine,,False
+地,dì,the earth,,False
+除了,chúle,except,,False
+大陆,dàlù,Ch. mainland,,False
+需要,xūyào,need,,False
+像,xiàng,be like,,False
+给,gěi,give,,False
+岁,suì,year (for crops),,False
+请,qǐng,request,,False
+月,yuè,moon,,False
+些,xiē,m.[proximation],,False
+名,míng,m.[general],,False
+另,lìng,another,,False
+若,ruò,conj.: if,,False
+亦,yì,also,,False
+地区,dìqū,section,,False
+技术,jìshù,mechanics,,False
+至,zhì,"to, until, till",,False
+特别,tèbié,unusual,,False
+其实,qíshí,as a matter of fact,,False
+国际,guójì,international,,False
+不要,búyào,never,,False
+发生,fāshēng,happen,,False
+参加,cānjiā,join,,False
+一定,yīdìng,must,,False
+其中,qízhōng,among,,False
+问,wèn,ask,,False
+台北,táiběi,capital of Nationalist China,,False
+包括,bāokuò,consist_of,,False
+讲,jiǎng,discourse,,False
+造成,zàochéng,make_for,,False
+常,cháng,often,,False
+即,jí,at present,,False
+喜欢,xǐhuān,like,,False
+没,méi,not,,False
+出现,chūxiàn,appear,,False
+政治,zhèngzhì,paternalism,,False
+话,huà,words,,False
+走,zǒu,scram,,False
+单位,dānwèi,department,,False
+一直,yīzhí,e'er,,False
+吧,ba,particle: used to show mild imperative or uncertainty,,False
+是否,shìfǒu,whether or not,,False
+当然,dāngrán,certainly,,False
+整,zhěng,exact,,False
+处理,chǔlǐ,handle,,False
+历史,lìshǐ,past records,,False
+了解,liǎojiě,understand,,False
+怎么,zěnme,how,,False
+机会,jīhuì,scouth,,False
+听,tīng,hear,,False
+所有,suǒyǒu,all,,False
+只要,zhǐyào,conj.: so long as,,False
+朋友,péngyou,amigo,,False
+令,lìng,make,,False
+甚至,shènzhì,even (to the point of),,False
+真,zhēn,really,,False
+六,liù,six,,False
+呀,ya,particle: replacing 啊 when preceding word ends in a,,False
+情况,qíngkuàng,event,,False
+还是,háishì,still,,False
+钱,qián,copper coin,,False
+方法,fāngfǎ,know-how,,False
+点,diǎn,m.[proximation],,False
+任何,rènhé,aught,,False
+经验,jīngyàn,experience,,False
+艺术,yìshù,beaux-arts,,False
+你们,nǐmen,you,,False
+十,shí,ten,,False
+主要,zhǔyào,main,,False
+妈妈,māmā,mummy,,False
+增加,zēngjiā,increase,,False
+提出,tíchū,put forward,,False
+为什么,wèishénme,why,,False
+您,nín,you,,False
+计画,jìhuà,plan,,False
+作,zuò,"do, make, rise, write, compose, pretend, affect, feign",,False
+利用,lìyòng,use,,False
+东西,dōngxī,thing,,False
+条,tiáo,bar,,False
+设计,shèjì,design,,False
+找,zhǎo,look for,,False
+之间,zhījiān,among,,False
+成长,chéngzhǎng,grow up,,False
+能够,nénggòu,can,,False
+决定,juédìng,decide,,False
+学习,xuéxí,study,,False
+谁,shéi,who,,False
+见,jiàn,see,,False
+半,bàn,half,,False
+时代,shídài,day,,False
+完成,wánchéng,fill in,,False
+带,dài,look after,,False
+相当,xiāngdāng,quite,,False
+同学,tóngxué,class fellow,,False
+件,jiàn,correspondence,,False
+能力,nénglì,department,,False
+别人,biérén,others,,False
+生命,shēngmìng,breath,,False
+场,cháng,m.[event],,False
+会议,huìyì,synod,,False
+容易,róngyì,easy,,False
+开发,kāifā,develop,,False
+民众,mínzhòng,civil,,False
+事情,shìqíng,proposition,,False
+书,shū,volume,,False
+事实,shìshí,mood,,False
+有关,yǒuguān,be related,,False
+自,zì,from,,False
+组织,zǔzhī,tissue,,False
+言,yán,say,,False
+爱,ài,love,,False
+建立,jiànlì,establish,,False
+相关,xiāngguān,cognate,,False
+均,jūn,without exception,,False
+产生,chǎnshēng,come into being,,False
+业者,yèzhě,dealer,,False
+解决,jiějué,solve,,False
+完全,wánquán,completely,,False
+的话,dehuà,conj.: if,,False
+接受,jiēshòu,receive (honors,,False
+知,zhī,tell,,False
+约,yuē,about,,False
+一般,yībān,general,,False
+推动,tuīdòng,push forward,,False
+过程,guòchéng,unconscious process,,False
+管理,guǎnlǐ,manage,,False
+功能,gōngnéng,functional,,False
+手,shǒu,hand,,False
+打,dǎ,generalized verb of doing with specific meaning determined by its object,,False
+水,shuǐ,water,,False
+要求,yāoqiú,request,,False
+小朋友,xiǎopéngyǒu,child (adult address to child),,False
+教授,jiàoshòu,professor,,False
+难,nán,make difficulties,,False
+我国,wǒguó,our country,,False
+告诉,gàosù,tell,,False
+内容,nèiróng,subject_matter,,False
+结果,jiéguǒ,result,,False
+调查,diàochá,investigate,,False
+家庭,jiātíng,hearthstone,,False
+成立,chénglì,found,,False
+选择,xuǎnzé,select,,False
+经营,jīngyíng,manage,,False
+然而,ránér,conj.: even so,,False
+父母,fùmǔ,parental,,False
+写,xiě,description,,False
+人类,rénlèi,man,,False
+至于,zhìyū,as for/to,,False
+买,mǎi,pick up,,False
+尤其,yóuqí,especially,,False
+配合,pèihé,coordinate,,False
+进入,jìnrù,go_into,,False
+例如,lìrú,for instance/example,,False
+得,děi,should be,,False
+讨论,tǎolùn,to discuss,,False
+依,yī,according to,,False
+作品,zuòpǐn,writing,,False
+情形,qíngxíng,circumstance,,False
+资源,zīyuán,resource,,False
+原因,yuányīn,origin,,False
+啦,lā,particle: used when informing sb. of st.; indicating excitement/doubt/comfort/etc.,,False
+妳,nǐ,you(female),,False
+运动,yùndòng,sports,,False
+观念,guānniàn,conception,,False
+软体,ruǎntǐ,software,,False
+品质,pǐnzhí,calibre,,False
+经过,jīngguò,pass,,False
+如此,rúcǐ,thus,,False
+嗯,ēn,O.K.,,False
+精神,jīngshén,god,,False
+影响,yǐngxiǎng,influence,,False
+之,zhī,"it, him, her, this",,False
+好像,hǎoxiàng,seem,,False
+成,chéng,become,,False
+参与,cānyū,participate in,,False
+以后,yǐhòu,afterwards,,False
+于是,yūshì,conj.: thereupon,,False
+部分,bùfèn,partial,,False
+另外,lìngwài,conj.: in addition,,False
+公园,gōngyuán,common,,False
+透过,tòuguò,via,,False
+训练,xùnliàn,training,,False
+努力,nǔlì,make great effort,,False
+具有,jùyǒu,be provided with,,False
+共同,gòngtóng,common,,False
+所谓,suǒwèi,so-called,,False
+行为,xíngwéi,fact,,False
+合作,hézuò,cooperate,,False
+经,jīng,as a result of,,False
+目标,mùbiāo,polestar,,False
+起来,qǐlái,[aspect],,False
+考虑,kǎolǜ,think over,,False
+长,cháng,long,,False
+意见,yìjiàn,latitude,,False
+办法,bànfǎ,road,,False
+音乐,yīnyuè,music,,False
+连,lián,conj.: including,,False
+受,shòu,passive signifier,,False
+厂商,chǎngshāng,factory owner,,False
+受到,shòudào,experience,,False
+一切,yīqiè,everything,,False
+或是,huòshì,conj.: or,,False
+中央,zhōngyāng,central authorities (of state/party/etc.),,False
+某,mǒu,some,,False
+女性,nǔxìng,lady,,False
+教学,jiāoxué,teach and study,,False
+极,jí,extraordinary,,False
+获得,huòdé,find,,False
+真的,zhēnde,really,,False
+路,lù,road,,False
+快,kuài,fast,,False
+国小,guóxiǎo,primary/elementary school,,False
+部份,bùfèn,composition,,False
+工程,gōngchéng,process,,False
+女人,nǔrén,jade,,False
+举行,jǔxíng,hold (meeting/etc.),,False
+句,jù,sentence,,False
+只是,zhǐshì,merely,,False
+段,duàn,m.[general],,False
+根据,gēnjù,on the basis of,,False
+现象,xiànxiàng,phenomenon,,False
+人民,rénmín,multitude,,False
+土地,tǔdì,country,,False
+面对,miànduì,face up,,False
+注意,zhùyì,pay attention to,,False
+这里,zhèlǐ,this place,,False
+新闻,xīnwén,unco,,False
+继续,jìxù,"go, resume, keep_on, abide, come on, persist in, extend, run_on, run on, carry_on, stretch, sustain, pursue, keep going, continuance, get_along, get_on, remain, continue, keep_up, go ahead, keep up, come up, continuation, hold, carry, run, go_on, maintain, go on, bide, plow ahead, hold_on, piece, restart",,False
+相信,xiāngxìn,deem,,False
+政策,zhèngcè,statism,,False
+变成,biànchéng,grow_into,,False
+计划,jìhuà,plan,,False
+强调,qiángdiào,underscore,,False
+学,xué,study,,False
+人士,rénshì,public figure,,False
+前,qián,front,,False
+存在,cúnzài,exist,,False
+制度,zhìdù,ism,,False
+意义,yìyì,importance,,False
+代表,dàibiǎo,representative,,False
+课程,kèchéng,course of instruction,,False
+需求,xūqiú,need,,False
+人生,rénshēng,lifetime,,False
+那些,nǎxiē,those,,False
+成功,chénggōng,succeed,,False
+爸爸,bàbà,old man,,False
+产业,chǎnyè,estate,,False
+负责,fùzé,preside,,False
+民间,mínjiān,grass roots,,False
+虽,suī,conj.: though,,False
+直接,zhíjiē,direct,,False
+几乎,jīhū,chiefly,,False
+分,fèn,m.[general],,False
+实际,shíjì,practical,,False
+团体,tuántǐ,fraternity,,False
+价值,jiàzhí,value,,False
+使得,shǐde,render,,False
+类,lèi,m.[kind],,False
+形成,xíngchéng,take shape,,False
+科技,kējì,technology,,False
+这么,zhème,"so, such, this way, like this",,False
+七,qī,seven,,False
+不但,búdàn,conj.: not only,,False
+往,wǎng,go toward,,False
+本身,běnshēn,per se,,False
+标准,biāozhǔn,standard,,False
+似乎,sìhū,it seems,,False
+应用,yìngyòng,application,,False
+或者,huòzhě,conj.: or,,False
+动物,dòngwù,thing,,False
+电话,diànhuà,blower,,False
+态度,tàidù,stance,,False
+建设,jiànshè,construction,,False
+事业,shìyè,proposition,,False
+老,lǎo,old,,False
+那么,nàmo,so,,False
+常常,chángcháng,oftentimes,,False
+字,zì,graphic symbol,,False
+坐,zuò,sit,,False
+举办,jǔbàn,conduct,,False
+自我,zìwǒ,self,,False
+有的,yǒude,det : some,,False
+具,jù,possess,,False
+目的,mùdì,view,,False
+块,kuài,m.[general],,False
+条件,tiáojiàn,mood,,False
+即使,jíshǐ,conj.: even,,False
+十分,shífēn,very,,False
+多少,duōshǎo,how many,,False
+放,fàng,loose,,False
+电影,diànyǐng,cinematography,,False
+科学,kēxué,ology,,False
+执行,zhíxíng,carry out,,False
+边,biān,border,,False
+委员会,wěiyuánhuì,board,,False
+沟通,gōutōng,communicate,,False
+开,kāi,open,,False
+一起,yīqǐ,in_chorus,,False
+张,zhāng,m.[general],,False
+针对,zhēnduì,in the light of,,False
+员工,yuángōng,employee,,False
+引起,yǐnqǐ,elicit,,False
+自然,zìrán,natural world,,False
+安全,ānquán,safe,,False
+总统,zǒngtǒng,president (of a republic),,False
+此外,cǐwài,conj.: besides,,False
+拥有,yǒngyǒu,occupy,,False
+并且,bìngqiě,conj.: and,,False
+事件,shìjiàn,fact,,False
+研究所,yánjiùsuǒ,graduate_school,,False
+语言,yǔyán,linguistic communication,,False
+严重,yánzhòng,serious,,False
+故事,gùshì,spiel,,False
+学术,xuéshù,ology,,False
+片,piàn,m.[general],,False
+设备,shèbèi,installation,,False
+之外,zhīwài,beyond,,False
+车,chē,vehicle,,False
+基本,jīběn,fundamental,,False
+实在,shízài,indeed,,False
+久,jiǔ,for long time,,False
+套,tào,m.[general],,False
+达到,dádào,extend to,,False
+改善,gǎishàn,improve,,False
+死,sǐ,die,,False
+结构,jiégòu,constitution,,False
+住,zhù,inhabit,,False
+皆,jiē,all,,False
+改变,gǎibiàn,change,,False
+拿,ná,take,,False
+小组,xiǎozǔ,squad,,False
+支持,zhīchí,sustain,,False
+座,zuò,fare,,False
+医院,yīyuàn,spital,,False
+既,jì,conj.: since...then,,False
+仅,jǐn,scantily,,False
+值得,zhíde,be worth,,False
+学者,xuézhě,academic,,False
+八,bā,eight,,False
+交通,jiāotōng,intercourse,,False
+阶段,jiēduàn,staged,,False
+就是,jiùshì,conj.: even if,,False
+申请,shēnqǐng,apply for,,False
+主管,zhǔguǎn,person in charge,,False
+同,tóng,simialr,,False
+感觉,gǎnjué,sense perception,,False
+电视,diànshì,"TV, box, iconoscope, video, television set, teevee, orthicon, huckster, TV set, radiovision, television, telecasting, airwave, telly",,False
+母亲,mǔqīn,venter,,False
+嘛,má,particle: used to persuade someone to do something; used to emphasize the obvious,,False
+香港,xiānggǎng,Hong Kong,,False
+记者,jìzhě,journalist,,False
+压力,yālì,force per unit area,,False
+快乐,kuàilè,happy,,False
+喝,hē,drink,,False
+敢,gǎn,dare,,False
+院,yuàn,public facility,,False
+也许,yěxǔ,possibly,,False
+人们,rénmen,workforce,,False
+谈,tán,talk,,False
+生产,shēngchǎn,produce,,False
+怕,pà,I'm afraid,,False
+身体,shēntǐ,soma,,False
+规定,guīdìng,rules,,False
+程度,chéngdù,latitude,,False
+积极,jījí,positive,,False
+知识,zhīshì,lear,,False
+作为,zuòwéi,regard as,,False
+机构,jīgòu,internal structure of an organization,,False
+而是,érshì,conj.: if not A,,False
+鼓励,gǔlì,encourage,,False
+角色,jiǎosè,theatrical role,,False
+状况,zhuàngkuàng,repair,,False
+专家,zhuānjiā,guru,,False
+据,jù,according to,,False
+清楚,qīngchǔ,clear,,False
+不仅,bùjǐn,conj.: not only,,False
+比赛,bǐsài,match,,False
+玩,wán,amuse oneself,,False
+效果,xiàoguǒ,operation,,False
+越,yuè,~A~B) the more A the more B,,False
+保护,bǎohù,protect,,False
+共,gòng,totally,,False
+开放,kāifàng,lift a ban/etc.,,False
+附近,fùjìn,neighborship,,False
+父亲,fùqīn,parent,,False
+专业,zhuānyè,professional,,False
+经费,jīngfèi,finances,,False
+曾经,céngjīng,in one case,,False
+愿意,yuànyì,will,,False
+分别,fēnbié,separately,,False
+重视,zhòngshì,attach importance to,,False
+不少,bùshǎo,a lot of,,False
+欢迎,huānyíng,invite,,False
+小孩,xiǎohái,kid,,False
+小时,xiǎoshí,hour,,False
+中国人,zhōngguórén,Chinese person,,False
+显示,xiǎnshì,demonstrate,,False
+中共,zhōnggòng,Chinese Communist Party,,False
+出,chū,produce,,False
+男人,nánrén,male,,False
+避免,bìmiǎn,forbear,,False
+属于,shǔyú,fall under,,False
+实施,shíshī,put into effect,,False
+声音,shēngyīn,voice,,False
+主义,zhǔyì,tenet,,False
+行动,xíngdòng,action,,False
+不可,bùkě,cannot,,False
+只有,zhǐyǒu,can only,,False
+校园,xiàoyuán,schoolyard,,False
+兴趣,xìngqù,relish,,False
+山,shān,Shan,,False
+表现,biǎoxiàn,manifestation,,False
+回来,huílái,come back,,False
+主任,zhǔrèn,head,,False
+里面,lǐmiàn,inside,,False
+经常,jīngcháng,everyday,,False
+不再,búzài,no more/longer,,False
+电子,diànzǐ,electron,,False
+思想,sīxiǎng,cogitation,,False
+头,tóu,head,,False
+终于,zhōngyū,in the last analysis,,False
+谢谢,xièxiè,thank,,False
+协助,xiézhù,assist,,False
+除,chú,except,,False
+当地,dāngdì,locality,,False
+正式,zhèngshì,formal (of actions/speeches/etc.),,False
+真正,zhēnzhèng,true,,False
+低,dī,let droop,,False
+性,xìng,nature,,False
+份,fèn,m.[general],,False
+因素,yīnsù,consideration,,False
+推出,tuīchū,present to public,,False
+价格,jiàgé,price,,False
+认识,rènshì,know,,False
+方向,fāngxiàng,path,,False
+责任,zérèn,need,,False
+说明,shuōmíng,explain,,False
+工业,gōngyè,industrial,,False
+大量,dàliàng,any numer of,,False
+逐渐,zhújiàn,step_by_step,,False
+心理,xīnlǐ,mental_state,,False
+一点,yīdiǎn,a little bit,,False
+供,gōng,supply,,False
+须,xū,must,,False
+简单,jiǎndān,terse,,False
+运用,yùnyòng,utilize,,False
+观察,guānchá,observe,,False
+往往,wǎngwǎng,oftentimes,,False
+规划,guīhuà,plan,,False
+减少,jiǎnshǎo,reduce,,False
+重新,chóngxīn,over_again,,False
+业务,yèwù,service,,False
+报导,bàodǎo,report,,False
+仍然,réngrán,still,,False
+感到,gǎndào,feel,,False
+领域,lǐngyù,demesne,,False
+有效,yǒuxiào,run,,False
+女,nǔ,girl,,False
+从事,cóngshì,engross,,False
+发挥,fāhuī,bring into play,,False
+人才,réncái,talent,,False
+反而,fǎnér,conj.: on the contrary,,False
+行政,xíngzhèng,administration,,False
+银行,yínháng,jug,,False
+公共,gōnggòng,common,,False
+媒体,méitǐ,mass media,,False
+提高,tígāo,raise,,False
+代,dài,period,,False
+社区,shèqū,community,,False
+力量,lìliàng,fibre,,False
+教育部,jiàoyūbù,Education,,False
+愈,yū,the more...,,False
+超过,chāoguò,overpass,,False
+维持,wéichí,keep,,False
+家长,jiāzhǎng,masterman,,False
+结合,jiéhé,combine,,False
+校长,xiàozhǎng,prexy,,False
+通常,tōngcháng,normal,,False
+缺乏,quēfá,be short of,,False
+委员,wěiyuán,commissar,,False
+特色,tèsè,motif,,False
+有时,yǒushí,now and then,,False
+教师,jiàoshī,beak,,False
+之前,zhīqián,before,,False
+远,yuǎn,far,,False
+控制,kòngzhì,control,,False
+否则,fǒuzé,conj.: otherwise,,False
+法,fǎ,law,,False
+少,shǎo,lack,,False
+原则,yuánzé,god,,False
+脸,liǎn,map,,False
+通过,tōngguò,adopt,,False
+建议,jiànyì,propose,,False
+工具,gōngjù,stock-in-trade,,False
+作业,zuòyè,school assignment,,False
+达,dá,lead,,False
+节目,jiémù,item,,False
+智慧,zhìhuì,lore,,False
+来自,láizì,come from,,False
+变化,biànhuà,change,,False
+同样,tóngyàng,same,,False
+形式,xíngshì,circumstance,,False
+站,zhàn,to stand,,False
+以为,yǐwéi,imagine,,False
+健康,jiànkāng,healthy,,False
+担任,dānrèn,hold the post of,,False
+人口,rénkǒu,population,,False
+刚,gāng,exactly,,False
+特殊,tèshū,exceptional,,False
+原来,yuánlái,originally,,False
+道,dào,say,,False
+传统,chuántǒng,rule,,False
+总是,zǒngshì,always,,False
+前往,qiánwǎng,depart,,False
+投资,tóuzī,investment,,False
+加强,jiāqiáng,strengthen,,False
+不断,búduàn,unceasingly,,False
+对象,duìxiàng,boy/girl friend,,False
+追求,zhuīqiú,seek,,False
+加上,jiāshàng,conj.: in addition (to),,False
+思考,sīkǎo,ponder over,,False
+制作,zhìzuò,make,,False
+台北市,táiběishì,capital of Republic of China on Taiwan,,False
+取得,qǔdé,gain,,False
+出来,chūlái,come forward,,False
+加入,jiārù,join,,False
+台,tái,short for Taiwan,,False
+安排,ānpái,arrange,,False
+儿童,értóng,kid,,False
+国中,guózhōng,middle school,,False
+范围,fànwéi,demesne,,False
+老人,lǎorén,oldster,,False
+双方,shuāngfāng,both,,False
+牠,tā,it (animal),,False
+北京,běijīng,capital of Red China,,False
+年轻,niánqīng,junior,,False
+结束,jiéshù,end,,False
+教,jiāo,teach,,False
+程式,chéngshì,formula,,False
+妇女,fùnǔ,feme,,False
+找到,zhǎodào,light upon,,False
+彼此,bǐcǐ,each other,,False
+全球,quánqiú,global,,False
+成本,chéngběn,cost,,False
+回到,huídào,remount,,False
+部,bù,m.[general],,False
+而已,éryǐ,particle: imparting finality (that's all),,False
+之下,zhīxià,under the condition of,,False
+变,biàn,change,,False
+期间,qíjiān,length,,False
+非,fēi,not,,False
+小姐,xiǎojiě,Signorina,,False
+整体,zhěngtǐ,integrity,,False
+采用,cǎiyòng,invoke,,False
+根本,gēnběn,at all,,False
+叫,jiào,to be called,,False
+欧洲,ōuzhōu,Europe,,False
+正在,zhèngzài,course of,,False
+加以,jiāyǐ,handle; treat (used before polysyllabic verbs or verbal nouns),,False
+充满,chōngmǎn,swarm,,False
+系列,xìliè,succession,,False
+随着,suízhe,along with,,False
+早,zǎo,early,,False
+等等,děngděng,conj.: and so on,,False
+颇,pǒ,pretty,,False
+不足,bùzú,not be enough,,False
+总,zǒng,always,,False
+分析,fēnxī,analyze,,False
+深,shēn,deepen,,False
+报告,bàogào,report,,False
+不错,búcuò,not bad,,False
+在于,zàiyū,be at,,False
+旁,páng,side,,False
+笑,xiào,smile,,False
+故,gù,conj.: hence,,False
+消费者,xiāofèizhě,customer,,False
+意识,yìshì,consciousness,,False
+公尺,gōngchǐ,m.[standard],,False
+民族,mínzú,tribe,,False
+为主,wéizhǔ,give first place to,,False
+大众,dàzhòng,the broad masses,,False
+到底,dàodǐ,to the end,,False
+愿,yuàn,will,,False
+度,dù,m.[activity],,False
+大概,dàgài,chiefly,,False
+对方,duìfāng,other party,,False
+官员,guānyuán,beg,,False
+发表,fābiǎo,voice,,False
+进一步,jìnyībù,go step further,,False
+自由,zìyóu,free,,False
+正确,zhèngquè,correct,,False
+丰富,fēngfù,rich,,False
+国民党,guómíndǎng,Kuomintang,,False
+战争,zhànzhēng,war,,False
+怎么样,zěnmeyàng,How are things?,,False
+只好,zhǐhǎo,can only,,False
+明显,míngxiǎn,clear,,False
+改革,gǎigé,reform,,False
+表达,biǎodá,express,,False
+肯定,kěndìng,affirm,,False
+强,qiáng,strong,,False
+高兴,gāoxìng,glad,,False
+哪,nǎ,which,,False
+树,shù,wood,,False
+适合,shìhé,qualify,,False
+茶,chá,tea,,False
+别,bié,don't,,False
+国外,guówài,overseas,,False
+关心,guānxīn,be concerned about,,False
+苏联,sūlián,Russia,,False
+成绩,chéngjī,execution,,False
+人物,rénwù,character,,False
+听到,tīngdào,hear,,False
+创造,chuàngzào,create,,False
+不必,búbì,need not,,False
+不论,búlùn,conj.: no matter how/who/what/etc.,,False
+尚,shàng,still,,False
+居民,jūmín,municipality,,False
+不管,bùguǎn,conj.: no matter,,False
+美丽,měilì,beautiful,,False
+伊拉克,yīlākè,Al-Iraq,,False
+带来,dàilái,bring,,False
+般,bān,way,,False
+永远,yǒngyuǎn,e'er,,False
+感情,gǎnqíng,warmheartedness,,False
+儿子,érzi,son,,False
+这样子,zhèyàngzi,"so, such, like this, this way",,False
+起,qǐ,[aspect],,False
+全部,quánbù,lot,,False
