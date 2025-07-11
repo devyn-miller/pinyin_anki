@@ -1,3 +1,92 @@
 2025-07-11 07:40:19,715 - __main__ - INFO - Loaded CSV with 844 rows
 2025-07-11 07:40:33,319 - __main__ - INFO - Downloaded image: media/一_0.jpg
 2025-07-11 07:40:33,328 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:48:24,185 - __main__ - INFO - Loaded CSV with 844 rows
+2025-07-11 07:48:34,830 - __main__ - INFO - Downloaded image: media/一_0.jpg
+2025-07-11 07:48:34,838 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:51:34,334 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:51:34,334 - __main__ - INFO - Custom image processed: media/在_1.jpg
+2025-07-11 07:52:59,200 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:52:59,200 - __main__ - INFO - Custom image processed: media/有_2.jpg
+2025-07-11 07:54:07,167 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:54:07,167 - __main__ - INFO - Custom image processed: media/个_3.jpg
+2025-07-11 07:54:35,312 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:54:35,312 - __main__ - INFO - Custom image processed: media/我_4.jpg
+2025-07-11 07:55:01,411 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:55:01,411 - __main__ - INFO - Custom image processed: media/不_5.jpg
+2025-07-11 07:57:39,554 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:57:39,555 - __main__ - INFO - Custom image processed: media/这_6.jpg
+2025-07-11 07:58:01,885 - __main__ - INFO - Downloaded image: media/他_7.jpg
+2025-07-11 07:58:01,889 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:58:27,676 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:58:27,676 - __main__ - INFO - Custom image processed: media/也_8.jpg
+2025-07-11 07:59:41,186 - __main__ - INFO - CSV saved successfully
+2025-07-11 07:59:41,186 - __main__ - INFO - Custom image processed: media/就_9.jpg
+2025-07-11 08:00:02,313 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:00:02,313 - __main__ - INFO - Custom image processed: media/人_10.jpg
+2025-07-11 08:00:42,512 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:00:42,512 - __main__ - INFO - Custom image processed: media/都_11.jpg
+2025-07-11 08:01:02,284 - __main__ - INFO - Downloaded image: media/说_12.jpg
+2025-07-11 08:01:02,288 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:02:39,418 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:02:39,418 - __main__ - INFO - Custom image processed: media/而_13.jpg
+2025-07-11 08:03:46,860 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:03:46,861 - __main__ - INFO - Custom image processed: media/们_14.jpg
+2025-07-11 08:04:12,021 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:04:12,021 - __main__ - INFO - Custom image processed: media/你_15.jpg
+2025-07-11 08:04:38,888 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:04:38,888 - __main__ - INFO - Custom image processed: media/了_16.jpg
+2025-07-11 08:04:45,846 - __main__ - INFO - Downloaded image: media/要_17.jpg
+2025-07-11 08:04:45,850 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:05:16,662 - __main__ - INFO - Downloaded image: media/会_18.jpg
+2025-07-11 08:05:16,668 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:05:28,024 - __main__ - INFO - Downloaded image: media/对_19.jpg
+2025-07-11 08:05:28,028 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:05:30,920 - __main__ - INFO - Downloaded image: media/及_20.jpg
+2025-07-11 08:05:30,924 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:05:56,353 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:05:56,353 - __main__ - INFO - Custom image processed: media/和_21.jpg
+2025-07-11 08:06:02,288 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:06:02,289 - __main__ - INFO - Custom image processed: media/与_22.jpg
+2025-07-11 08:06:40,690 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:06:40,690 - __main__ - INFO - Custom image processed: media/以_23.jpg
+2025-07-11 08:06:56,097 - __main__ - INFO - Downloaded image: media/很_24.jpg
+2025-07-11 08:06:56,101 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:08:01,824 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:08:01,824 - __main__ - INFO - Custom image processed: media/种_25.jpg
+2025-07-11 08:10:02,897 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:10:02,897 - __main__ - INFO - Custom image processed: media/的_26.jpg
+2025-07-11 08:11:34,270 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:11:34,271 - __main__ - INFO - Custom image processed: media/大_27.jpg
+2025-07-11 08:11:58,844 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:11:58,844 - __main__ - INFO - Custom image processed: media/能_28.jpg
+2025-07-11 08:13:08,761 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:13:08,761 - __main__ - INFO - Custom image processed: media/着_29.jpg
+2025-07-11 08:14:03,779 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:14:03,780 - __main__ - INFO - Custom image processed: media/她_30.jpg
+2025-07-11 08:15:46,392 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:15:46,392 - __main__ - INFO - Custom image processed: media/那_31.jpg
+2025-07-11 08:16:14,743 - __main__ - INFO - Downloaded image: media/上_32.jpg
+2025-07-11 08:16:14,748 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:16:50,674 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:16:50,674 - __main__ - INFO - Custom image processed: media/但_33.jpg
+2025-07-11 08:16:57,247 - __main__ - INFO - Downloaded image: media/年_34.jpg
+2025-07-11 08:16:57,252 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:17:33,865 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:17:33,865 - __main__ - INFO - Custom image processed: media/还_35.jpg
+2025-07-11 08:18:26,213 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:18:26,214 - __main__ - INFO - Custom image processed: media/还_35.jpg
+2025-07-11 08:19:35,926 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:19:35,927 - __main__ - INFO - Custom image processed: media/可以_36.jpg
+2025-07-11 08:20:38,421 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:20:38,421 - __main__ - INFO - Custom image processed: media/最_37.jpg
+2025-07-11 08:20:56,389 - __main__ - INFO - Downloaded image: media/自己_38.jpg
+2025-07-11 08:20:56,393 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:23:46,628 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:23:46,629 - __main__ - INFO - Custom image processed: media/为_39.jpg
+2025-07-11 08:24:26,867 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:24:26,867 - __main__ - INFO - Custom image processed: media/来_40.jpg
+2025-07-11 08:25:48,960 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:25:48,962 - __main__ - INFO - Custom image processed: media/所_41.jpg
+2025-07-11 08:26:20,292 - __main__ - INFO - CSV saved successfully
+2025-07-11 08:26:20,292 - __main__ - INFO - Custom image processed: media/他们_42.jpg

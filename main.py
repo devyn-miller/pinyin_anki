@@ -15,11 +15,12 @@ import logging
 import time
 from datetime import datetime
 from pathlib import Path
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageGrab
 import genanki
 import random
 import threading
 from typing import Optional, List, Dict, Any
+import io
 
 # Configure logging
 logging.basicConfig(
@@ -247,20 +248,42 @@ class ImageApprovalGUI:
         control_frame = ttk.Frame(main_frame)
         control_frame.pack(fill=tk.X, pady=(0, 10))
         
+        # Left side buttons
+        left_buttons = ttk.Frame(control_frame)
+        left_buttons.pack(side=tk.LEFT)
+        
         self.use_image_btn = ttk.Button(
-            control_frame, 
+            left_buttons, 
             text="✓ Use This Image", 
             command=self.use_current_image,
             state=tk.DISABLED
         )
-        self.use_image_btn.pack(side=tk.LEFT, padx=(0, 10))
+        self.use_image_btn.pack(side=tk.LEFT, padx=(0, 5))
         
         self.skip_word_btn = ttk.Button(
-            control_frame, 
+            left_buttons, 
             text="✗ Skip Word", 
             command=self.skip_word
         )
-        self.skip_word_btn.pack(side=tk.LEFT, padx=(0, 10))
+        self.skip_word_btn.pack(side=tk.LEFT, padx=(0, 5))
+        
+        # Custom image buttons
+        custom_buttons = ttk.Frame(control_frame)
+        custom_buttons.pack(side=tk.LEFT, padx=(20, 0))
+        
+        self.custom_image_btn = ttk.Button(
+            custom_buttons, 
+            text="📁 Use Custom Image", 
+            command=self.use_custom_image
+        )
+        self.custom_image_btn.pack(side=tk.LEFT, padx=(0, 5))
+        
+        self.paste_image_btn = ttk.Button(
+            custom_buttons, 
+            text="📋 Paste Image", 
+            command=self.paste_image_from_clipboard
+        )
+        self.paste_image_btn.pack(side=tk.LEFT, padx=(0, 5))
         
         self.export_btn = ttk.Button(
             control_frame, 
@@ -418,6 +441,155 @@ class ImageApprovalGUI:
         else:
             messagebox.showinfo("Complete", "All words have been processed!")
             self.export_btn.config(state=tk.NORMAL)
+    
+    def use_custom_image(self):
+        """Allow user to select a custom image file"""
+        file_path = filedialog.askopenfilename(
+            title="Select Image File",
+            filetypes=[
+                ("Image files", "*.jpg *.jpeg *.png *.gif *.bmp"),
+                ("JPEG files", "*.jpg *.jpeg"),
+                ("PNG files", "*.png"),
+                ("All files", "*.*")
+            ]
+        )
+        
+        if not file_path:
+            return
+        
+        try:
+            # Validate image
+            with Image.open(file_path) as img:
+                # Check if image is valid
+                img.verify()
+            
+            # Process the custom image
+            self.process_custom_image(file_path)
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Invalid image file: {e}")
+            logger.error(f"Error validating custom image: {e}")
+    
+    def paste_image_from_clipboard(self):
+        """Paste image from clipboard"""
+        try:
+            # Try to get image from clipboard
+            clipboard_image = ImageGrab.grabclipboard()
+            
+            if clipboard_image is None:
+                messagebox.showwarning("No Image", "No image found in clipboard.\n\nTip: Copy an image (Ctrl+C) before pasting.")
+                return
+            
+            if not isinstance(clipboard_image, Image.Image):
+                messagebox.showwarning("Invalid Content", "Clipboard content is not an image.\n\nPlease copy an image first.")
+                return
+            
+            # Save clipboard image to temporary file
+            word = self.state_manager.get_current_word()
+            temp_filename = f"clipboard_{word['simplified']}_{self.state_manager.current_index}.png"
+            temp_filepath = self.media_dir / temp_filename
+            
+            # Save with reasonable quality
+            clipboard_image.save(temp_filepath, format='PNG', optimize=True)
+            
+            # Process the pasted image
+            self.process_custom_image(str(temp_filepath), is_clipboard=True)
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to paste image from clipboard: {e}")
+            logger.error(f"Error pasting image from clipboard: {e}")
+    
+    def process_custom_image(self, image_path: str, is_clipboard: bool = False):
+        """Process a custom image (from file or clipboard)"""
+        try:
+            word = self.state_manager.get_current_word()
+            
+            # Create final filename
+            final_filename = f"{word['simplified']}_{self.state_manager.current_index}.jpg"
+            final_filepath = self.media_dir / final_filename
+            
+            # Load and process image
+            with Image.open(image_path) as img:
+                # Convert to RGB if necessary
+                if img.mode in ('RGBA', 'LA', 'P'):
+                    # Create white background
+                    background = Image.new('RGB', img.size, (255, 255, 255))
+                    if img.mode == 'P':
+                        img = img.convert('RGBA')
+                    background.paste(img, mask=img.split()[-1] if img.mode in ('RGBA', 'LA') else None)
+                    img = background
+                elif img.mode != 'RGB':
+                    img = img.convert('RGB')
+                
+                # Resize if too large (max 800x600 for efficiency)
+                max_size = (800, 600)
+                if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                
+                # Save processed image
+                img.save(final_filepath, format='JPEG', quality=85, optimize=True)
+            
+            # Update preview
+            self.display_custom_image(final_filepath)
+            
+            # Update state
+            self.state_manager.update_current_word(
+                image_path=str(final_filepath),
+                approved=True
+            )
+            
+            # Show success message
+            source_text = "clipboard" if is_clipboard else "file"
+            self.status_label.config(text=f"Custom image from {source_text} saved", foreground="green")
+            
+            # Clean up temporary clipboard file
+            if is_clipboard and image_path != str(final_filepath):
+                try:
+                    os.remove(image_path)
+                except:
+                    pass
+            
+            logger.info(f"Custom image processed: {final_filepath}")
+            
+            # Ask if user wants to continue or approve this image
+            response = messagebox.askyesno(
+                "Custom Image Added", 
+                f"Custom image has been saved for '{word['simplified']}'.\n\n"
+                "Do you want to continue to the next word?\n\n"
+                "Click 'Yes' to continue, 'No' to stay on this word."
+            )
+            
+            if response:
+                # Move to next word
+                if self.state_manager.next_word():
+                    self.load_next_word()
+                else:
+                    messagebox.showinfo("Complete", "All words have been processed!")
+                    self.export_btn.config(state=tk.NORMAL)
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to process custom image: {e}")
+            logger.error(f"Error processing custom image: {e}")
+    
+    def display_custom_image(self, image_path: str):
+        """Display the custom image in the preview"""
+        try:
+            # Load and display image
+            img = Image.open(image_path)
+            img.thumbnail((400, 300), Image.Resampling.LANCZOS)
+            
+            photo = ImageTk.PhotoImage(img)
+            self.image_label.config(image=photo, text="")
+            self.image_label.image = photo  # Keep reference
+            
+            # Update navigation to show custom image
+            self.image_counter_label.config(text="Custom Image")
+            self.prev_img_btn.config(state=tk.DISABLED)
+            self.next_img_btn.config(state=tk.DISABLED)
+            self.use_image_btn.config(state=tk.DISABLED)  # Already processed
+            
+        except Exception as e:
+            logger.error(f"Error displaying custom image: {e}")
     
     def export_deck(self):
         """Export approved words to Anki deck"""
