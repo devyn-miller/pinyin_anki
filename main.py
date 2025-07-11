@@ -547,7 +547,7 @@ class WorkflowController:
         """Run the complete workflow"""
         try:
             # Get Pexels API key
-            api_key = self.get_pexels_api_key()
+            api_key = "EeP7WehuGtuiIdvrz4125UfkRqOhW8PQt7iL9drO5494JNbW06ShbRYd"
             if not api_key:
                 return
             
@@ -573,13 +573,13 @@ class WorkflowController:
             logger.error(f"Workflow error: {e}")
             messagebox.showerror("Error", f"Workflow failed: {e}")
     
-    def get_pexels_api_key(self) -> Optional[str]:
-        """Get Pexels API key from user"""
-        api_key = simpledialog.askstring(
-            "API Key Required",
-            "Please enter your Pexels API key:",
-            show="*"
-        )
+    # def get_pexels_api_key(self) -> Optional[str]:
+    #     """Get Pexels API key from user"""
+    #     api_key = simpledialog.askstring(
+    #         "API Key Required",
+    #         "Please enter your Pexels API key:",
+    #         show="*"
+    #     )
         
         if not api_key:
             messagebox.showwarning("Warning", "API key is required to proceed.")
