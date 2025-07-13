@@ -19,11 +19,12 @@ class AnkiDeckProcessor:
         self.root.title("Anki Deck Processor")
         self.root.geometry("800x600")
         
-        # Expected field order based on your note type
+        # Updated field order based on your actual file format (13 fields)
         self.field_names = [
             'Word', 'Definitions 1', 'Definitions 2', 'Example Sentence',
             'Sentence Translation', 'word_audio', 'sentence_audio', 'image',
-            'cloze_sentence', 'prompt', 'scrambled_sentence', 'reconstructed_sentence'
+            'cloze_sentence', 'prompt', 'scrambled_sentence', 'reconstructed_sentence',
+            'tags'  # Added tags column
         ]
         
         # We'll add pinyin fields after processing
@@ -122,15 +123,38 @@ class AnkiDeckProcessor:
             return
         
         try:
-            # Read the tab-delimited file
-            self.df = pd.read_csv(self.file_path.get(), sep='\t', header=None)
+            # Read the file and handle Anki export format
+            with open(self.file_path.get(), 'r', encoding='utf-8') as f:
+                lines = f.readlines()
             
-            # Assign column names
-            if len(self.df.columns) != len(self.field_names):
-                messagebox.showerror("Error", f"Expected {len(self.field_names)} columns, got {len(self.df.columns)}")
+            # Skip header lines (lines starting with #)
+            data_lines = []
+            for line in lines:
+                if not line.strip().startswith('#') and line.strip():
+                    data_lines.append(line.strip())
+            
+            if not data_lines:
+                messagebox.showerror("Error", "No data found in file!")
                 return
             
-            self.df.columns = self.field_names
+            # Parse tab-separated data
+            data = []
+            for line in data_lines:
+                fields = line.split('\t')
+                # Ensure we have exactly 13 fields
+                while len(fields) < 13:
+                    fields.append('')
+                data.append(fields[:13])  # Take only first 13 fields
+            
+            # Create DataFrame
+            self.df = pd.DataFrame(data, columns=self.field_names)
+            
+            # Clean up empty rows
+            self.df = self.df[self.df['Word'].str.strip() != '']
+            
+            if self.df.empty:
+                messagebox.showerror("Error", "No valid cards found in file!")
+                return
             
             # Add pinyin columns
             self.add_pinyin_columns()
@@ -151,7 +175,7 @@ class AnkiDeckProcessor:
     def add_pinyin_columns(self):
         """Add pinyin for Chinese text fields"""
         def clean_chinese_text(text):
-            if pd.isna(text):
+            if pd.isna(text) or text == '':
                 return ""
             # Remove HTML tags and keep only Chinese characters
             text = re.sub(r'<[^>]+>', '', str(text))
@@ -161,7 +185,10 @@ class AnkiDeckProcessor:
         def get_pinyin(text):
             if not text:
                 return ""
-            return ' '.join(lazy_pinyin(text, style=Style.TONE))
+            try:
+                return ' '.join(lazy_pinyin(text, style=Style.TONE))
+            except:
+                return ""
         
         # Add pinyin for Word
         self.df['Word_Pinyin'] = self.df['Word'].apply(lambda x: get_pinyin(clean_chinese_text(x)))
@@ -182,8 +209,14 @@ class AnkiDeckProcessor:
         
         # Update display
         self.card_info.set(f"Card {self.current_row + 1} of {len(self.df)}")
-        self.word_display.set(f"{row['Word']} ({row['Word_Pinyin']})")
-        self.sentence_display.set(f"{row['Example Sentence']}")
+        
+        # Handle empty or NaN values
+        word = str(row['Word']) if pd.notna(row['Word']) else ""
+        word_pinyin = str(row['Word_Pinyin']) if pd.notna(row['Word_Pinyin']) else ""
+        sentence = str(row['Example Sentence']) if pd.notna(row['Example Sentence']) else ""
+        
+        self.word_display.set(f"{word} ({word_pinyin})")
+        self.sentence_display.set(sentence)
         
         # Clear previous selections
         for var in self.card_types.values():
@@ -191,15 +224,13 @@ class AnkiDeckProcessor:
         self.prompt_entry.delete(1.0, tk.END)
         
         # Auto-suggest based on simple heuristics
-        word = str(row['Word'])
-        sentence = str(row['Example Sentence'])
-        
-        # Simple auto-suggestions
-        if any(char in word for char in ['的', '了', '着', '过', '么', '呢', '吧', '啊']):
-            self.card_types['type2'].set(True)  # Particles
-        
-        if len(word) == 1 and not any(char in word for char in ['的', '了', '着', '过']):
-            self.card_types['type1'].set(True)  # Single character nouns
+        if word:
+            # Simple auto-suggestions
+            if any(char in word for char in ['的', '了', '着', '过', '么', '呢', '吧', '啊']):
+                self.card_types['type2'].set(True)  # Particles
+            
+            if len(word) == 1 and not any(char in word for char in ['的', '了', '着', '过']):
+                self.card_types['type1'].set(True)  # Single character nouns
     
     def previous_card(self):
         if self.current_row > 0:
@@ -257,44 +288,53 @@ class AnkiDeckProcessor:
     
     def generate_cloze_sentence(self, sentence: str, word: str) -> str:
         """Replace target word with blank in sentence"""
-        if pd.isna(sentence) or pd.isna(word):
+        if pd.isna(sentence) or pd.isna(word) or sentence == '' or word == '':
             return ""
         return str(sentence).replace(str(word), "___")
     
     def generate_scrambled_with_blank(self, sentence: str, word: str) -> str:
         """Generate sentence with blank where word should go"""
-        if pd.isna(sentence) or pd.isna(word):
+        if pd.isna(sentence) or pd.isna(word) or sentence == '' or word == '':
             return ""
         return f"___ {str(sentence).replace(str(word), '').strip()}"
     
     def generate_scrambled_tokens(self, sentence: str) -> str:
         """Generate scrambled tokens separated by /"""
-        if pd.isna(sentence):
+        if pd.isna(sentence) or sentence == '':
             return ""
         
-        # Simple tokenization - in practice you might want to use jieba
-        tokens = list(jieba.cut(str(sentence)))
-        # Remove empty tokens
-        tokens = [t for t in tokens if t.strip()]
-        
-        # Scramble (simple reverse for now - you could randomize)
-        tokens.reverse()
-        
-        return " / ".join(tokens)
+        try:
+            # Simple tokenization - using jieba for Chinese
+            tokens = list(jieba.cut(str(sentence)))
+            # Remove empty tokens
+            tokens = [t for t in tokens if t.strip()]
+            
+            if not tokens:
+                return ""
+            
+            # Scramble (simple reverse for now - you could randomize)
+            tokens.reverse()
+            
+            return " / ".join(tokens)
+        except:
+            return ""
     
     def get_pinyin_for_text(self, text: str) -> str:
         """Get pinyin for any Chinese text"""
-        if not text:
+        if not text or pd.isna(text):
             return ""
         
-        # Remove HTML and non-Chinese characters for pinyin
-        clean_text = re.sub(r'<[^>]+>', '', str(text))
-        clean_text = re.sub(r'[^\u4e00-\u9fff]', '', clean_text)
-        
-        if not clean_text:
+        try:
+            # Remove HTML and non-Chinese characters for pinyin
+            clean_text = re.sub(r'<[^>]+>', '', str(text))
+            clean_text = re.sub(r'[^\u4e00-\u9fff]', '', clean_text)
+            
+            if not clean_text:
+                return ""
+            
+            return ' '.join(lazy_pinyin(clean_text, style=Style.TONE))
+        except:
             return ""
-        
-        return ' '.join(lazy_pinyin(clean_text, style=Style.TONE))
     
     def finish_processing(self):
         """Save the final processed deck"""
@@ -318,7 +358,17 @@ class AnkiDeckProcessor:
             input_path = self.file_path.get()
             output_path = input_path.replace('.txt', '_processed.txt')
             
-            output_df.to_csv(output_path, sep='\t', index=False, header=False)
+            # Write with proper Anki format
+            with open(output_path, 'w', encoding='utf-8') as f:
+                # Write header lines
+                f.write("#separator:tab\n")
+                f.write("#html:true\n")
+                f.write(f"#tags column:{len(output_columns)}\n")
+                
+                # Write data
+                for _, row in output_df.iterrows():
+                    line = '\t'.join(str(val) if pd.notna(val) else '' for val in row)
+                    f.write(line + '\n')
             
             messagebox.showinfo("Success", f"Processed deck saved to:\n{output_path}")
             
