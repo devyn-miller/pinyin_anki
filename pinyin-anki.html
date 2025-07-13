@@ -1,0 +1,403 @@
+## Card 1: Picture + Audio Recognition
+
+### Front Template
+{{#Make_Card_1}}
+{{#image}}
+{{#word_audio}}
+<div class="customCard">
+  <div class="targetWordContainerFront">
+    <div class="image" style="margin-bottom: 20px;">{{image}}</div>
+    <div class="wordAudioButtonFront">{{word_audio}}</div>
+  </div>
+</div>
+{{/word_audio}}
+{{/image}}
+{{/Make_Card_1}}
+
+### Back Template
+{{#Make_Card_1}}
+{{#image}}
+{{#word_audio}}
+<div class="customCard cardBack">
+  <div class="targetWordContainerBack borderBottom">
+    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+      <span class="targetWord">{{Word}}</span>
+      {{#Word_Pinyin}}
+      <span class="pinyin" style="font-size: 16px; color: var(--color-hint); margin-top: 4px;">{{Word_Pinyin}}</span>
+      {{/Word_Pinyin}}
+    </div>
+    <span class="wordAudioButtonBack">{{word_audio}}</span>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">example:</div>
+    <div class="indent">
+      <div class="exampleSentenceWrapper">
+        <span>"{{Example Sentence}}"</span>
+        <span>{{sentence_audio}}</span>
+      </div>
+      {{#Example_Sentence_Pinyin}}
+      <div class="pinyin" style="color: var(--color-hint); font-size: 14px; margin-top: 4px; font-style: italic;">{{Example_Sentence_Pinyin}}</div>
+      {{/Example_Sentence_Pinyin}}
+      <div class="sentenceTranslation">{{hint:Sentence Translation}}</div>
+    </div>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">definitions:</div>
+    <div class="indent">
+      <ul class="definitionsList">
+        {{#Definitions 1}}
+        <li>{{Definitions 1}}</li>
+        {{/Definitions 1}}
+        {{#Definitions 2}}
+        <li>{{Definitions 2}}</li>
+        {{/Definitions 2}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="image borderBottom">{{image}}</div>
+
+  <div class="footer">
+    <span>Card 1: Picture + Audio Recognition</span>
+  </div>
+</div>
+{{/word_audio}}
+{{/image}}
+{{/Make_Card_1}}
+
+---
+
+## Card 2: Cloze Sentence
+
+### Front Template
+{{#Make_Card_2}}
+{{#cloze_sentence}}
+<div class="customCard">
+  <div class="targetWordContainerFront">
+    <div class="exampleSentence" style="font-size: 24px; text-align: center; color: var(--color-text-primary);">
+      {{cloze_sentence}}
+    </div>
+    {{#cloze_sentence_pinyin}}
+    <div class="pinyin" style="color: var(--color-hint); font-size: 16px; text-align: center; margin-top: 8px; font-style: italic;">
+      {{cloze_sentence_pinyin}}
+    </div>
+    {{/cloze_sentence_pinyin}}
+    {{#sentence_audio}}
+    <div class="wordAudioButtonFront">{{sentence_audio}}</div>
+    {{/sentence_audio}}
+  </div>
+</div>
+{{/cloze_sentence}}
+{{/Make_Card_2}}
+
+### Back Template
+{{#Make_Card_2}}
+{{#cloze_sentence}}
+<div class="customCard cardBack">
+  <div class="targetWordContainerBack borderBottom">
+    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+      <span class="targetWord">{{Word}}</span>
+      {{#Word_Pinyin}}
+      <span class="pinyin" style="font-size: 16px; color: var(--color-hint); margin-top: 4px;">{{Word_Pinyin}}</span>
+      {{/Word_Pinyin}}
+    </div>
+    <span class="wordAudioButtonBack">{{word_audio}}</span>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">complete sentence:</div>
+    <div class="indent">
+      <div class="exampleSentenceWrapper">
+        <span>"{{Example Sentence}}"</span>
+        <span>{{sentence_audio}}</span>
+      </div>
+      {{#Example_Sentence_Pinyin}}
+      <div class="pinyin" style="color: var(--color-hint); font-size: 14px; margin-top: 4px; font-style: italic;">{{Example_Sentence_Pinyin}}</div>
+      {{/Example_Sentence_Pinyin}}
+      <div class="sentenceTranslation">{{hint:Sentence Translation}}</div>
+    </div>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">definitions:</div>
+    <div class="indent">
+      <ul class="definitionsList">
+        {{#Definitions 1}}
+        <li>{{Definitions 1}}</li>
+        {{/Definitions 1}}
+        {{#Definitions 2}}
+        <li>{{Definitions 2}}</li>
+        {{/Definitions 2}}
+      </ul>
+    </div>
+  </div>
+
+  {{#image}}
+  <div class="image borderBottom">{{image}}</div>
+  {{/image}}
+
+  <div class="footer">
+    <span>Card 2: Cloze Sentence</span>
+  </div>
+</div>
+{{/cloze_sentence}}
+{{/Make_Card_2}}
+
+---
+
+## Card 3: Cloze + Prompt
+
+### Front Template
+{{#Make_Card_3}}
+{{#cloze_sentence}}
+{{#prompt}}
+<div class="customCard">
+  <div class="targetWordContainerFront">
+    <div class="exampleSentence" style="font-size: 24px; text-align: center; color: var(--color-text-primary);">
+      {{cloze_sentence}}
+    </div>
+    {{#cloze_sentence_pinyin}}
+    <div class="pinyin" style="color: var(--color-hint); font-size: 16px; text-align: center; margin-top: 8px; font-style: italic;">
+      {{cloze_sentence_pinyin}}
+    </div>
+    {{/cloze_sentence_pinyin}}
+    <div class="section" style="margin-top: 20px; padding: 12px; background-color: rgba(131, 105, 237, 0.1); border-radius: 6px;">
+      <div class="header">hint:</div>
+      <div style="color: var(--color-hint); font-style: italic; margin-top: 4px;">{{prompt}}</div>
+    </div>
+    {{#sentence_audio}}
+    <div class="wordAudioButtonFront">{{sentence_audio}}</div>
+    {{/sentence_audio}}
+  </div>
+</div>
+{{/prompt}}
+{{/cloze_sentence}}
+{{/Make_Card_3}}
+
+### Back Template
+{{#Make_Card_3}}
+{{#cloze_sentence}}
+{{#prompt}}
+<div class="customCard cardBack">
+  <div class="targetWordContainerBack borderBottom">
+    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+      <span class="targetWord">{{Word}}</span>
+      {{#Word_Pinyin}}
+      <span class="pinyin" style="font-size: 16px; color: var(--color-hint); margin-top: 4px;">{{Word_Pinyin}}</span>
+      {{/Word_Pinyin}}
+    </div>
+    <span class="wordAudioButtonBack">{{word_audio}}</span>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">complete sentence:</div>
+    <div class="indent">
+      <div class="exampleSentenceWrapper">
+        <span>"{{Example Sentence}}"</span>
+        <span>{{sentence_audio}}</span>
+      </div>
+      {{#Example_Sentence_Pinyin}}
+      <div class="pinyin" style="color: var(--color-hint); font-size: 14px; margin-top: 4px; font-style: italic;">{{Example_Sentence_Pinyin}}</div>
+      {{/Example_Sentence_Pinyin}}
+      <div class="sentenceTranslation">{{hint:Sentence Translation}}</div>
+    </div>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">explanation:</div>
+    <div class="indent">
+      <div style="color: var(--color-hint); font-style: italic;">{{prompt}}</div>
+    </div>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">definitions:</div>
+    <div class="indent">
+      <ul class="definitionsList">
+        {{#Definitions 1}}
+        <li>{{Definitions 1}}</li>
+        {{/Definitions 1}}
+        {{#Definitions 2}}
+        <li>{{Definitions 2}}</li>
+        {{/Definitions 2}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Card 3: Cloze + Prompt</span>
+  </div>
+</div>
+{{/prompt}}
+{{/cloze_sentence}}
+{{/Make_Card_3}}
+
+---
+
+## Card 4: Word Placement
+
+### Front Template
+{{#Make_Card_4}}
+{{#scrambled_sentence}}
+<div class="customCard">
+  <div class="targetWordContainerFront">
+    <div class="section">
+      <div class="header">place the word in the correct position:</div>
+      <div style="margin: 20px 0;">
+        <div class="targetWord" style="color: var(--color-audio-button);">{{Word}}</div>
+        {{#Word_Pinyin}}
+        <div class="pinyin" style="color: var(--color-hint); font-size: 16px; margin-top: 4px;">{{Word_Pinyin}}</div>
+        {{/Word_Pinyin}}
+      </div>
+      <div class="exampleSentence" style="font-size: 22px; text-align: center; color: var(--color-text-primary);">
+        {{scrambled_sentence}}
+      </div>
+      {{#scrambled_sentence_pinyin}}
+      <div class="pinyin" style="color: var(--color-hint); font-size: 16px; text-align: center; margin-top: 8px; font-style: italic;">
+        {{scrambled_sentence_pinyin}}
+      </div>
+      {{/scrambled_sentence_pinyin}}
+    </div>
+    {{#word_audio}}
+    <div class="wordAudioButtonFront">{{word_audio}}</div>
+    {{/word_audio}}
+  </div>
+</div>
+{{/scrambled_sentence}}
+{{/Make_Card_4}}
+
+### Back Template
+{{#Make_Card_4}}
+{{#scrambled_sentence}}
+<div class="customCard cardBack">
+  <div class="targetWordContainerBack borderBottom">
+    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+      <span class="targetWord">{{Word}}</span>
+      {{#Word_Pinyin}}
+      <span class="pinyin" style="font-size: 16px; color: var(--color-hint); margin-top: 4px;">{{Word_Pinyin}}</span>
+      {{/Word_Pinyin}}
+    </div>
+    <span class="wordAudioButtonBack">{{word_audio}}</span>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">correct sentence:</div>
+    <div class="indent">
+      <div class="exampleSentenceWrapper">
+        <span>"{{Example Sentence}}"</span>
+        <span>{{sentence_audio}}</span>
+      </div>
+      {{#Example_Sentence_Pinyin}}
+      <div class="pinyin" style="color: var(--color-hint); font-size: 14px; margin-top: 4px; font-style: italic;">{{Example_Sentence_Pinyin}}</div>
+      {{/Example_Sentence_Pinyin}}
+      <div class="sentenceTranslation">{{hint:Sentence Translation}}</div>
+    </div>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">definitions:</div>
+    <div class="indent">
+      <ul class="definitionsList">
+        {{#Definitions 1}}
+        <li>{{Definitions 1}}</li>
+        {{/Definitions 1}}
+        {{#Definitions 2}}
+        <li>{{Definitions 2}}</li>
+        {{/Definitions 2}}
+      </ul>
+    </div>
+  </div>
+
+  {{#image}}
+  <div class="image borderBottom">{{image}}</div>
+  {{/image}}
+
+  <div class="footer">
+    <span>Card 4: Word Placement</span>
+  </div>
+</div>
+{{/scrambled_sentence}}
+{{/Make_Card_4}}
+
+---
+
+## Card 5: Sentence Reconstruction
+
+### Front Template
+{{#Make_Card_5}}
+{{#scrambled_sentence}}
+<div class="customCard">
+  <div class="targetWordContainerFront">
+    <div class="section">
+      <div class="header">reconstruct the sentence:</div>
+      <div class="exampleSentence" style="font-size: 20px; text-align: center; color: var(--color-text-primary); line-height: 1.6; margin-top: 20px;">
+        {{scrambled_sentence}}
+      </div>
+      {{#scrambled_sentence_pinyin}}
+      <div class="pinyin" style="color: var(--color-hint); font-size: 16px; text-align: center; margin-top: 8px; font-style: italic; line-height: 1.6;">
+        {{scrambled_sentence_pinyin}}
+      </div>
+      {{/scrambled_sentence_pinyin}}
+    </div>
+    {{#sentence_audio}}
+    <div class="wordAudioButtonFront">{{sentence_audio}}</div>
+    {{/sentence_audio}}
+  </div>
+</div>
+{{/scrambled_sentence}}
+{{/Make_Card_5}}
+
+### Back Template
+{{#Make_Card_5}}
+{{#scrambled_sentence}}
+<div class="customCard cardBack">
+  <div class="targetWordContainerBack borderBottom">
+    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+      <span class="targetWord">{{Word}}</span>
+      {{#Word_Pinyin}}
+      <span class="pinyin" style="font-size: 16px; color: var(--color-hint); margin-top: 4px;">{{Word_Pinyin}}</span>
+      {{/Word_Pinyin}}
+    </div>
+    <span class="wordAudioButtonBack">{{word_audio}}</span>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">correct sentence:</div>
+    <div class="indent">
+      <div class="exampleSentenceWrapper">
+        <span>"{{reconstructed_sentence}}"</span>
+        <span>{{sentence_audio}}</span>
+      </div>
+      {{#reconstructed_sentence_pinyin}}
+      <div class="pinyin" style="color: var(--color-hint); font-size: 14px; margin-top: 4px; font-style: italic;">{{reconstructed_sentence_pinyin}}</div>
+      {{/reconstructed_sentence_pinyin}}
+      <div class="sentenceTranslation">{{hint:Sentence Translation}}</div>
+    </div>
+  </div>
+
+  <div class="section borderBottom">
+    <div class="header">definitions:</div>
+    <div class="indent">
+      <ul class="definitionsList">
+        {{#Definitions 1}}
+        <li>{{Definitions 1}}</li>
+        {{/Definitions 1}}
+        {{#Definitions 2}}
+        <li>{{Definitions 2}}</li>
+        {{/Definitions 2}}
+      </ul>
+    </div>
+  </div>
+
+  {{#image}}
+  <div class="image borderBottom">{{image}}</div>
+  {{/image}}
+
+  <div class="footer">
+    <span>Card 5: Sentence Reconstruction</span>
+  </div>
+</div>
+{{/scrambled_sentence}}
+{{/Make_Card_5}}
