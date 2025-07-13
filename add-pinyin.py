@@ -169,9 +169,9 @@ class AnkiDeckProcessor:
         self.current_card_index = 0
         self.input_file = ""
         self.output_file = ""
+        self.processor = CardTypeProcessor()
         
         self.setup_ui()
-        self.processor = CardTypeProcessor()
     
     def setup_ui(self):
         """Setup the main UI"""
