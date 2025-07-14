@@ -1,271 +1,52 @@
 #!/usr/bin/env python3
 """
-Anki Deck Processor - Transform 8-field Yomitan exports to 17-field custom note type
-
-This script processes .txt files exported from Yomitan + ASB Player with 8 fields
-and expands them to 17 fields for use with a custom Anki note type that generates
-5 different card types.
-
-Requirements:
-    pip install pypinyin pillow
-
-Usage:
-    python anki_processor.py input.txt output.txt
-
-Author: Generated for Anki deck processing
+Anki Card Converter - Convert Yomitan + ASB Player exports to enhanced 17-field format
+Supports 5 distinct card types with intelligent suggestions and GUI interface
 """
 
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
-import os
 import re
 import random
-from PIL import Image, ImageTk
-from pypinyin import pinyin, Style
-import sys
 from typing import List, Dict, Optional, Tuple
+import os
+import sys
 
+# Install pypinyin if not available
+try:
+    from pypinyin import pinyin, lazy_pinyin, Style
+except ImportError:
+    print("pypinyin not found. Installing...")
+    import subprocess
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pypinyin"])
+    from pypinyin import pinyin, lazy_pinyin, Style
 
-class AnkiNote:
-    """Represents a single Anki note with 8 input fields and 17 output fields"""
-    
-    def __init__(self, input_fields: List[str]):
-        """Initialize with 8 input fields from tab-separated line"""
-        if len(input_fields) < 8:
-            # Pad with empty strings if insufficient fields
-            input_fields.extend([''] * (8 - len(input_fields)))
-        
-        # Input fields (8 total)
-        self.word = input_fields[0].strip()
-        self.definitions_1 = input_fields[1].strip()
-        self.definitions_2 = input_fields[2].strip()
-        self.example_sentence = input_fields[3].strip()
-        self.sentence_translation = input_fields[4].strip()
-        self.word_audio = input_fields[5].strip()
-        self.sentence_audio = input_fields[6].strip()
-        self.image = input_fields[7].strip()
-        
-        # Generated fields (will be populated based on card type selection)
-        self.cloze_sentence = ""
-        self.cloze_sentence_pinyin = ""
-        self.scrambled_sentence = ""
-        self.scrambled_sentence_pinyin = ""
-        self.reconstructed_sentence = ""
-        self.reconstructed_sentence_pinyin = ""
-        self.prompt = ""
-        self.word_pinyin = ""
-        self.example_sentence_pinyin = ""
-        
-        # Clean HTML from definitions for display
-        self.clean_definitions_1 = self._clean_html(self.definitions_1)
-        self.clean_definitions_2 = self._clean_html(self.definitions_2)
-        self.clean_sentence = self._clean_html(self.example_sentence)
-        
-    def _clean_html(self, text: str) -> str:
-        """Remove HTML tags and clean up text for display"""
-        if not text:
-            return ""
-        
-        # Remove HTML tags
-        text = re.sub(r'<[^>]+>', '', text)
-        # Remove extra whitespace
-        text = re.sub(r'\s+', ' ', text).strip()
-        # Convert HTML entities
-        text = text.replace('&quot;', '"').replace('&amp;', '&')
-        text = text.replace('&lt;', '<').replace('&gt;', '>')
-        return text
-    
-    def get_pinyin(self, chinese_text: str) -> str:
-        """Convert Chinese text to pinyin"""
-        if not chinese_text:
-            return ""
-        
-        # Clean the text first
-        clean_text = self._clean_html(chinese_text)
-        
-        try:
-            # Generate pinyin with tone marks
-            pinyin_result = pinyin(clean_text, style=Style.TONE, heteronym=False)
-            return ' '.join([item[0] for item in pinyin_result])
-        except Exception as e:
-            print(f"Error generating pinyin for '{clean_text}': {e}")
-            return ""
-    
-    def suggest_card_types(self) -> List[int]:
-        """Suggest appropriate card types based on heuristics"""
-        suggestions = []
-        
-        # Type 1: Image + Audio (concrete nouns, visual content)
-        if (self.image and 
-            any(keyword in self.clean_definitions_1.lower() for keyword in 
-                ['noun', 'object', 'thing', 'person', 'place', 'animal', 'food'])):
-            suggestions.append(1)
-        
-        # Type 2: Cloze (function words, particles, grammar)
-        if (len(self.word) <= 2 and 
-            any(keyword in self.clean_definitions_1.lower() for keyword in 
-                ['particle', 'marker', 'auxiliary', 'conjunction', 'preposition'])):
-            suggestions.append(2)
-        
-        # Type 3: Prompt + Cloze (grammar patterns, complex usage)
-        if (any(keyword in self.clean_definitions_1.lower() for keyword in 
-                ['grammar', 'pattern', 'structure', 'usage', 'expression']) or
-            '得' in self.clean_sentence or '不' in self.clean_sentence):
-            suggestions.append(3)
-        
-        # Type 4: Scrambled (word order, sentence structure)
-        if (len(self.clean_sentence.split()) > 4 and
-            any(keyword in self.clean_definitions_1.lower() for keyword in 
-                ['order', 'structure', 'arrangement', 'particle'])):
-            suggestions.append(4)
-        
-        # Type 5: Reconstruction (memorable sentences, complete thoughts)
-        if (len(self.clean_sentence.split()) > 3 and
-            any(keyword in self.sentence_translation.lower() for keyword in 
-                ['should', 'would', 'could', 'if', 'when', 'because'])):
-            suggestions.append(5)
-        
-        # Default suggestions if no specific heuristics match
-        if not suggestions:
-            if self.image:
-                suggestions.append(1)
-            if len(self.word) <= 2:
-                suggestions.append(2)
-            else:
-                suggestions.append(5)
-        
-        return suggestions
-    
-    def generate_content(self, selected_card_types: List[int]) -> None:
-        """Generate content for selected card types"""
-        # Always generate basic pinyin
-        self.word_pinyin = self.get_pinyin(self.word)
-        self.example_sentence_pinyin = self.get_pinyin(self.clean_sentence)
-        
-        # Generate content based on selected card types
-        if 2 in selected_card_types or 3 in selected_card_types:
-            self._generate_cloze_content()
-        
-        if 4 in selected_card_types:
-            self._generate_scrambled_content()
-        
-        if 5 in selected_card_types:
-            self._generate_reconstruction_content()
-        
-        # Generate prompt for any card type that needs it
-        if any(ct in selected_card_types for ct in [1, 2, 3, 4, 5]):
-            self._generate_prompt()
-    
-    def _generate_cloze_content(self) -> None:
-        """Generate cloze deletion content"""
-        if self.word in self.clean_sentence:
-            self.cloze_sentence = self.clean_sentence.replace(self.word, "___", 1)
-            # Generate pinyin version
-            pinyin_sentence = self.get_pinyin(self.clean_sentence)
-            word_pinyin = self.get_pinyin(self.word)
-            if word_pinyin and word_pinyin in pinyin_sentence:
-                self.cloze_sentence_pinyin = pinyin_sentence.replace(word_pinyin, "___", 1)
-        else:
-            # If word not found directly, create cloze at the end
-            self.cloze_sentence = self.clean_sentence + " ___"
-            self.cloze_sentence_pinyin = self.example_sentence_pinyin + " ___"
-    
-    def _generate_scrambled_content(self) -> None:
-        """Generate scrambled sentence content"""
-        # Split sentence into words/characters
-        words = self.clean_sentence.split()
-        if len(words) > 1:
-            # Scramble word order
-            scrambled_words = words.copy()
-            random.shuffle(scrambled_words)
-            self.scrambled_sentence = " / ".join(scrambled_words)
-            
-            # Generate pinyin version
-            pinyin_words = []
-            for word in scrambled_words:
-                pinyin_words.append(self.get_pinyin(word))
-            self.scrambled_sentence_pinyin = " / ".join(pinyin_words)
-        else:
-            # For single words or short phrases, scramble characters
-            chars = list(self.clean_sentence)
-            random.shuffle(chars)
-            self.scrambled_sentence = " / ".join(chars)
-            self.scrambled_sentence_pinyin = self.get_pinyin(self.scrambled_sentence)
-    
-    def _generate_reconstruction_content(self) -> None:
-        """Generate reconstruction content"""
-        self.reconstructed_sentence = self.clean_sentence
-        self.reconstructed_sentence_pinyin = self.example_sentence_pinyin
-    
-    def _generate_prompt(self) -> None:
-        """Generate helpful prompt based on definitions and context"""
-        prompts = []
-        
-        # Add definition-based prompt
-        if self.clean_definitions_1:
-            prompts.append(f"Meaning: {self.clean_definitions_1[:50]}...")
-        
-        # Add usage context
-        if "student" in self.clean_definitions_1.lower():
-            prompts.append("Used in educational contexts")
-        elif "time" in self.clean_definitions_1.lower():
-            prompts.append("Related to time or timing")
-        elif "food" in self.clean_definitions_1.lower():
-            prompts.append("Food-related vocabulary")
-        elif "particle" in self.clean_definitions_1.lower():
-            prompts.append("Grammar particle")
-        
-        self.prompt = " | ".join(prompts)
-    
-    def to_output_fields(self) -> List[str]:
-        """Convert to 17-field output format"""
-        return [
-            self.word,
-            self.definitions_1,
-            self.definitions_2,
-            self.example_sentence,
-            self.sentence_translation,
-            self.word_audio,
-            self.sentence_audio,
-            self.image,
-            self.cloze_sentence,
-            self.cloze_sentence_pinyin,
-            self.scrambled_sentence,
-            self.scrambled_sentence_pinyin,
-            self.reconstructed_sentence,
-            self.reconstructed_sentence_pinyin,
-            self.prompt,
-            self.word_pinyin,
-            self.example_sentence_pinyin
-        ]
-
-
-class AnkiProcessorGUI:
-    """GUI interface for processing Anki notes"""
-    
-    def __init__(self, root: tk.Tk):
-        self.root = root
-        self.root.title("Anki Deck Processor")
+class AnkiCardConverter:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("Anki Card Converter - Yomitan + ASB Player to 17-Field Format")
         self.root.geometry("1000x800")
         
         # Data storage
-        self.notes: List[AnkiNote] = []
-        self.current_note_index = 0
-        self.processed_notes: List[AnkiNote] = []
+        self.input_data = []
+        self.output_data = []
+        self.current_index = 0
+        self.input_file = None
+        self.output_file = None
         
-        # Card type descriptions
+        # Card type variables
         self.card_types = {
-            1: "Image + Audio (Visual recognition)",
-            2: "Cloze Deletion (Fill in the blank)",
-            3: "Prompt + Cloze (Grammar context)",
-            4: "Scrambled Sentence (Word order)",
-            5: "Reconstruction (Complete sentence)"
+            'type1': tk.BooleanVar(),  # Image + Audio
+            'type2': tk.BooleanVar(),  # Function words
+            'type3': tk.BooleanVar(),  # Complex grammar
+            'type4': tk.BooleanVar(),  # Tricky word order
+            'type5': tk.BooleanVar()   # Reconstruction
         }
         
-        self.setup_gui()
+        self.setup_ui()
         
-    def setup_gui(self):
-        """Initialize the GUI components"""
+    def setup_ui(self):
+        """Create the main UI interface"""
         # Main frame
         main_frame = ttk.Frame(self.root, padding="10")
         main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
@@ -275,361 +56,467 @@ class AnkiProcessorGUI:
         self.root.rowconfigure(0, weight=1)
         main_frame.columnconfigure(1, weight=1)
         
-        # File selection
+        # File selection frame
         file_frame = ttk.LabelFrame(main_frame, text="File Selection", padding="5")
         file_frame.grid(row=0, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        file_frame.columnconfigure(1, weight=1)
         
-        self.input_file_var = tk.StringVar()
-        self.output_file_var = tk.StringVar()
+        ttk.Button(file_frame, text="Select Input File", command=self.select_input_file).grid(row=0, column=0, padx=(0, 10))
+        self.input_label = ttk.Label(file_frame, text="No file selected")
+        self.input_label.grid(row=0, column=1, sticky=tk.W)
         
-        ttk.Label(file_frame, text="Input File:").grid(row=0, column=0, sticky=tk.W, pady=2)
-        ttk.Entry(file_frame, textvariable=self.input_file_var, width=50).grid(row=0, column=1, padx=5, pady=2)
-        ttk.Button(file_frame, text="Browse", command=self.browse_input_file).grid(row=0, column=2, pady=2)
+        ttk.Button(file_frame, text="Select Output File", command=self.select_output_file).grid(row=1, column=0, padx=(0, 10))
+        self.output_label = ttk.Label(file_frame, text="No output file selected")
+        self.output_label.grid(row=1, column=1, sticky=tk.W)
         
-        ttk.Label(file_frame, text="Output File:").grid(row=1, column=0, sticky=tk.W, pady=2)
-        ttk.Entry(file_frame, textvariable=self.output_file_var, width=50).grid(row=1, column=1, padx=5, pady=2)
-        ttk.Button(file_frame, text="Browse", command=self.browse_output_file).grid(row=1, column=2, pady=2)
+        # Progress frame
+        progress_frame = ttk.Frame(main_frame)
+        progress_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        progress_frame.columnconfigure(1, weight=1)
         
-        ttk.Button(file_frame, text="Load File", command=self.load_file).grid(row=2, column=1, pady=10)
+        self.progress_label = ttk.Label(progress_frame, text="Progress: 0/0")
+        self.progress_label.grid(row=0, column=0, padx=(0, 10))
         
-        # Progress info
-        self.progress_var = tk.StringVar(value="No file loaded")
-        ttk.Label(main_frame, textvariable=self.progress_var).grid(row=1, column=0, columnspan=2, pady=5)
+        self.progress_bar = ttk.Progressbar(progress_frame, mode='determinate')
+        self.progress_bar.grid(row=0, column=1, sticky=(tk.W, tk.E))
         
-        # Note display frame
-        note_frame = ttk.LabelFrame(main_frame, text="Current Note", padding="5")
-        note_frame.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
-        note_frame.columnconfigure(1, weight=1)
+        # Current item frame
+        item_frame = ttk.LabelFrame(main_frame, text="Current Item", padding="5")
+        item_frame.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        item_frame.columnconfigure(1, weight=1)
         
-        # Note content display
-        self.setup_note_display(note_frame)
+        # Word and basic info
+        ttk.Label(item_frame, text="Word:").grid(row=0, column=0, sticky=tk.W, padx=(0, 10))
+        self.word_var = tk.StringVar()
+        self.word_entry = ttk.Entry(item_frame, textvariable=self.word_var, width=20)
+        self.word_entry.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=(0, 10))
+        
+        ttk.Label(item_frame, text="Pinyin:").grid(row=0, column=2, sticky=tk.W, padx=(0, 10))
+        self.word_pinyin_var = tk.StringVar()
+        self.word_pinyin_entry = ttk.Entry(item_frame, textvariable=self.word_pinyin_var, width=20)
+        self.word_pinyin_entry.grid(row=0, column=3, sticky=(tk.W, tk.E))
+        
+        # Sentence
+        ttk.Label(item_frame, text="Sentence:").grid(row=1, column=0, sticky=tk.W, padx=(0, 10))
+        self.sentence_var = tk.StringVar()
+        self.sentence_entry = ttk.Entry(item_frame, textvariable=self.sentence_var, width=50)
+        self.sentence_entry.grid(row=1, column=1, columnspan=3, sticky=(tk.W, tk.E))
+        
+        # Sentence translation
+        ttk.Label(item_frame, text="Translation:").grid(row=2, column=0, sticky=tk.W, padx=(0, 10))
+        self.translation_var = tk.StringVar()
+        self.translation_entry = ttk.Entry(item_frame, textvariable=self.translation_var, width=50)
+        self.translation_entry.grid(row=2, column=1, columnspan=3, sticky=(tk.W, tk.E))
+        
+        # Audio files
+        ttk.Label(item_frame, text="Audio Files:").grid(row=3, column=0, sticky=tk.W, padx=(0, 10))
+        self.audio_var = tk.StringVar()
+        self.audio_label = ttk.Label(item_frame, textvariable=self.audio_var)
+        self.audio_label.grid(row=3, column=1, columnspan=3, sticky=tk.W)
+        
+        # Image preview
+        self.image_var = tk.StringVar()
+        self.image_label = ttk.Label(item_frame, text="No image")
+        self.image_label.grid(row=4, column=0, columnspan=4, sticky=tk.W, pady=(5, 0))
         
         # Card type selection
-        card_frame = ttk.LabelFrame(main_frame, text="Card Type Selection", padding="5")
+        card_frame = ttk.LabelFrame(main_frame, text="Card Types (Auto-suggested)", padding="5")
         card_frame.grid(row=3, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
         
-        self.card_type_vars = {}
-        for i, (card_type, description) in enumerate(self.card_types.items()):
-            var = tk.BooleanVar()
-            self.card_type_vars[card_type] = var
-            ttk.Checkbutton(card_frame, text=f"Type {card_type}: {description}", 
-                           variable=var).grid(row=i, column=0, sticky=tk.W, pady=2)
+        card_descriptions = {
+            'type1': 'Type 1: Image + Audio (concrete nouns)',
+            'type2': 'Type 2: Function words/particles',
+            'type3': 'Type 3: Complex grammar',
+            'type4': 'Type 4: Tricky word order',
+            'type5': 'Type 5: Sentence reconstruction'
+        }
         
-        # Generated content preview
-        preview_frame = ttk.LabelFrame(main_frame, text="Generated Content Preview", padding="5")
-        preview_frame.grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
-        preview_frame.columnconfigure(0, weight=1)
+        for i, (key, desc) in enumerate(card_descriptions.items()):
+            ttk.Checkbutton(card_frame, text=desc, variable=self.card_types[key]).grid(
+                row=i, column=0, sticky=tk.W, pady=2
+            )
+        
+        # Generated fields frame
+        fields_frame = ttk.LabelFrame(main_frame, text="Generated Fields (Editable)", padding="5")
+        fields_frame.grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(0, 10))
+        fields_frame.columnconfigure(1, weight=1)
         main_frame.rowconfigure(4, weight=1)
         
-        self.preview_text = scrolledtext.ScrolledText(preview_frame, height=10, width=80)
-        self.preview_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        # Create scrollable text areas for generated fields
+        self.field_vars = {}
+        field_labels = [
+            ('cloze_sentence', 'Cloze Sentence'),
+            ('scrambled_sentence', 'Scrambled Sentence'),
+            ('prompt', 'Prompt'),
+            ('sentence_pinyin', 'Sentence Pinyin')
+        ]
+        
+        for i, (key, label) in enumerate(field_labels):
+            ttk.Label(fields_frame, text=f"{label}:").grid(row=i, column=0, sticky=(tk.W, tk.N), padx=(0, 10))
+            self.field_vars[key] = tk.StringVar()
+            entry = ttk.Entry(fields_frame, textvariable=self.field_vars[key], width=60)
+            entry.grid(row=i, column=1, sticky=(tk.W, tk.E), pady=2)
         
         # Control buttons
         button_frame = ttk.Frame(main_frame)
-        button_frame.grid(row=5, column=0, columnspan=2, pady=10)
+        button_frame.grid(row=5, column=0, columnspan=2, pady=(10, 0))
         
-        ttk.Button(button_frame, text="Previous", command=self.previous_note).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Generate Preview", command=self.generate_preview).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Accept & Next", command=self.accept_and_next).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Skip", command=self.skip_note).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Save All", command=self.save_all).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(button_frame, text="Previous", command=self.previous_item).pack(side=tk.LEFT, padx=(0, 5))
+        ttk.Button(button_frame, text="Skip", command=self.skip_item).pack(side=tk.LEFT, padx=(0, 5))
+        ttk.Button(button_frame, text="Save & Next", command=self.save_and_next).pack(side=tk.LEFT, padx=(0, 5))
+        ttk.Button(button_frame, text="Regenerate", command=self.regenerate_suggestions).pack(side=tk.LEFT, padx=(0, 5))
+        ttk.Button(button_frame, text="Export All", command=self.export_data).pack(side=tk.LEFT, padx=(0, 5))
         
-        # Initially disable controls
-        self.toggle_controls(False)
-        
-    def setup_note_display(self, parent):
-        """Setup the note display area"""
-        # Word
-        ttk.Label(parent, text="Word:").grid(row=0, column=0, sticky=tk.W, pady=2)
-        self.word_var = tk.StringVar()
-        ttk.Label(parent, textvariable=self.word_var, font=("Arial", 14, "bold")).grid(row=0, column=1, sticky=tk.W, pady=2)
-        
-        # Definitions
-        ttk.Label(parent, text="Definitions:").grid(row=1, column=0, sticky=tk.W, pady=2)
-        self.def_var = tk.StringVar()
-        ttk.Label(parent, textvariable=self.def_var, wraplength=400).grid(row=1, column=1, sticky=tk.W, pady=2)
-        
-        # Example sentence
-        ttk.Label(parent, text="Example:").grid(row=2, column=0, sticky=tk.W, pady=2)
-        self.example_var = tk.StringVar()
-        ttk.Label(parent, textvariable=self.example_var, wraplength=400).grid(row=2, column=1, sticky=tk.W, pady=2)
-        
-        # Translation
-        ttk.Label(parent, text="Translation:").grid(row=3, column=0, sticky=tk.W, pady=2)
-        self.translation_var = tk.StringVar()
-        ttk.Label(parent, textvariable=self.translation_var, wraplength=400).grid(row=3, column=1, sticky=tk.W, pady=2)
-        
-        # Media info
-        ttk.Label(parent, text="Media:").grid(row=4, column=0, sticky=tk.W, pady=2)
-        self.media_var = tk.StringVar()
-        ttk.Label(parent, textvariable=self.media_var).grid(row=4, column=1, sticky=tk.W, pady=2)
-        
-        # Image preview (if available)
-        self.image_label = ttk.Label(parent)
-        self.image_label.grid(row=5, column=0, columnspan=2, pady=5)
-        
-    def browse_input_file(self):
-        """Browse for input file"""
+    def select_input_file(self):
+        """Select input .txt file"""
         filename = filedialog.askopenfilename(
             title="Select Input File",
             filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
         )
         if filename:
-            self.input_file_var.set(filename)
-            # Auto-generate output filename
-            base_name = os.path.splitext(filename)[0]
-            self.output_file_var.set(f"{base_name}_processed.txt")
+            self.input_file = filename
+            self.input_label.config(text=f"Input: {os.path.basename(filename)}")
+            self.load_input_data()
     
-    def browse_output_file(self):
-        """Browse for output file"""
+    def select_output_file(self):
+        """Select output .txt file"""
         filename = filedialog.asksaveasfilename(
             title="Select Output File",
             defaultextension=".txt",
             filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
         )
         if filename:
-            self.output_file_var.set(filename)
+            self.output_file = filename
+            self.output_label.config(text=f"Output: {os.path.basename(filename)}")
     
-    def load_file(self):
-        """Load and parse the input file"""
-        input_file = self.input_file_var.get()
-        if not input_file or not os.path.exists(input_file):
-            messagebox.showerror("Error", "Please select a valid input file")
-            return
-        
+    def load_input_data(self):
+        """Load and parse input data"""
         try:
-            with open(input_file, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
+            with open(self.input_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                
+            # Skip header lines starting with #
+            lines = [line for line in content.split('\n') if line.strip() and not line.startswith('#')]
             
-            # Skip header lines (starting with #)
-            data_lines = [line for line in lines if not line.strip().startswith('#') and line.strip()]
+            self.input_data = []
+            for line in lines:
+                fields = line.split('\t')
+                if len(fields) >= 8:
+                    self.input_data.append({
+                        'word': fields[0],
+                        'definitions1': fields[1],
+                        'definitions2': fields[2],
+                        'example_sentence': fields[3],
+                        'sentence_translation': fields[4],
+                        'word_audio': fields[5],
+                        'sentence_audio': fields[6],
+                        'image': fields[7] if len(fields) > 7 else ''
+                    })
             
-            self.notes = []
-            for line in data_lines:
-                fields = line.strip().split('\t')
-                if len(fields) >= 1:  # At least word field
-                    note = AnkiNote(fields)
-                    self.notes.append(note)
-            
-            if not self.notes:
-                messagebox.showerror("Error", "No valid notes found in file")
-                return
-            
-            self.current_note_index = 0
-            self.processed_notes = []
+            self.current_index = 0
+            self.progress_bar['maximum'] = len(self.input_data)
             self.update_display()
-            self.toggle_controls(True)
-            
-            messagebox.showinfo("Success", f"Loaded {len(self.notes)} notes")
             
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to load file: {str(e)}")
+            messagebox.showerror("Error", f"Failed to load input file: {str(e)}")
+    
+    def generate_pinyin(self, text: str) -> str:
+        """Generate pinyin for Chinese text"""
+        if not text.strip():
+            return ""
+        try:
+            # Remove punctuation and generate pinyin
+            chinese_chars = re.sub(r'[^\u4e00-\u9fff]', '', text)
+            if not chinese_chars:
+                return ""
+            pinyin_result = lazy_pinyin(chinese_chars, style=Style.TONE)
+            return ' '.join(pinyin_result)
+        except:
+            return ""
+    
+    def create_cloze_sentence(self, sentence: str, word: str) -> str:
+        """Create cloze deletion by replacing target word with blanks"""
+        if not sentence or not word:
+            return sentence
+        
+        # Replace the word with blanks
+        cloze = sentence.replace(word, '___')
+        if cloze == sentence:  # Word not found exactly, try partial matches
+            # Find the word in the sentence (handling multi-character words)
+            for i in range(len(sentence) - len(word) + 1):
+                if sentence[i:i+len(word)] == word:
+                    cloze = sentence[:i] + '___' + sentence[i+len(word):]
+                    break
+        return cloze
+    
+    def create_scrambled_sentence(self, sentence: str) -> str:
+        """Create scrambled sentence by randomizing word order"""
+        if not sentence:
+            return ""
+        
+        # Simple word segmentation - split by common punctuation and spaces
+        words = []
+        current_word = ""
+        
+        for char in sentence:
+            if char in '，。！？；：、':
+                if current_word:
+                    words.append(current_word)
+                    current_word = ""
+                words.append(char)
+            elif char.isspace():
+                if current_word:
+                    words.append(current_word)
+                    current_word = ""
+            else:
+                current_word += char
+        
+        if current_word:
+            words.append(current_word)
+        
+        # Simple scrambling - break into segments and shuffle
+        segments = []
+        current_segment = ""
+        
+        for word in words:
+            if word in '，。！？；：、':
+                if current_segment:
+                    segments.append(current_segment.strip())
+                    current_segment = ""
+            else:
+                current_segment += word + " "
+        
+        if current_segment:
+            segments.append(current_segment.strip())
+        
+        # Shuffle segments and join with " / "
+        if segments:
+            random.shuffle(segments)
+            return " / ".join(segments)
+        else:
+            # Fallback: just split by characters for very short sentences
+            chars = [c for c in sentence if c.strip()]
+            random.shuffle(chars)
+            return " / ".join(chars)
+    
+    def generate_prompt(self, word: str, definition: str, sentence: str) -> str:
+        """Generate a prompt for the word based on context"""
+        if not word or not definition:
+            return ""
+        
+        # Extract key concepts from definition
+        key_concepts = []
+        if "born" in definition.lower():
+            key_concepts.append("birth/life")
+        if "student" in definition.lower():
+            key_concepts.append("education")
+        if "grow" in definition.lower():
+            key_concepts.append("growth")
+        if "raw" in definition.lower():
+            key_concepts.append("uncooked")
+        
+        if key_concepts:
+            return f"Related to: {', '.join(key_concepts)}"
+        else:
+            # Fallback: use first part of definition
+            first_part = definition.split('/')[0].strip()
+            return f"Means: {first_part}"
+    
+    def suggest_card_types(self, data: Dict) -> None:
+        """Suggest card types based on heuristics"""
+        word = data['word']
+        sentence = data['example_sentence']
+        definition = data['definitions1']
+        has_image = bool(data['image'].strip())
+        
+        # Reset all card types
+        for var in self.card_types.values():
+            var.set(False)
+        
+        # Type 1: Image + Audio (concrete nouns)
+        concrete_indicators = ['person', 'thing', 'object', 'animal', 'food', 'place', 'building']
+        if has_image or any(indicator in definition.lower() for indicator in concrete_indicators):
+            self.card_types['type1'].set(True)
+        
+        # Type 2: Function words/particles
+        function_words = ['的', '了', '在', '是', '和', '或', '但', '而', '如果', '要是', '也', '都', '还', '又']
+        if len(word) <= 2 and word in function_words:
+            self.card_types['type2'].set(True)
+        
+        # Type 3: Complex grammar (long sentences, complex structures)
+        if len(sentence) > 15 and ('要是' in sentence or '如果' in sentence or '虽然' in sentence):
+            self.card_types['type3'].set(True)
+        
+        # Type 4: Tricky word order
+        if len(sentence) > 10 and len(sentence.split()) > 8:
+            self.card_types['type4'].set(True)
+        
+        # Type 5: Reconstruction (rich, memorable sentences)
+        if len(sentence) > 8 and len(sentence) < 25:
+            self.card_types['type5'].set(True)
     
     def update_display(self):
-        """Update the display with current note information"""
-        if not self.notes or self.current_note_index >= len(self.notes):
+        """Update the display with current item data"""
+        if not self.input_data or self.current_index >= len(self.input_data):
             return
         
-        note = self.notes[self.current_note_index]
+        data = self.input_data[self.current_index]
+        
+        # Update basic fields
+        self.word_var.set(data['word'])
+        self.sentence_var.set(data['example_sentence'])
+        self.translation_var.set(data['sentence_translation'])
+        
+        # Update audio info
+        audio_info = f"Word: {data['word_audio']}, Sentence: {data['sentence_audio']}"
+        self.audio_var.set(audio_info)
+        
+        # Update image info
+        if data['image'].strip():
+            self.image_label.config(text=f"Image: {data['image']}")
+        else:
+            self.image_label.config(text="No image")
+        
+        # Generate pinyin
+        word_pinyin = self.generate_pinyin(data['word'])
+        sentence_pinyin = self.generate_pinyin(data['example_sentence'])
+        self.word_pinyin_var.set(word_pinyin)
+        
+        # Generate other fields
+        cloze = self.create_cloze_sentence(data['example_sentence'], data['word'])
+        scrambled = self.create_scrambled_sentence(data['example_sentence'])
+        prompt = self.generate_prompt(data['word'], data['definitions1'], data['example_sentence'])
+        
+        self.field_vars['cloze_sentence'].set(cloze)
+        self.field_vars['scrambled_sentence'].set(scrambled)
+        self.field_vars['prompt'].set(prompt)
+        self.field_vars['sentence_pinyin'].set(sentence_pinyin)
+        
+        # Suggest card types
+        self.suggest_card_types(data)
         
         # Update progress
-        self.progress_var.set(f"Note {self.current_note_index + 1} of {len(self.notes)}")
-        
-        # Update note display
-        self.word_var.set(note.word)
-        self.def_var.set(f"{note.clean_definitions_1}\n{note.clean_definitions_2}")
-        self.example_var.set(note.clean_sentence)
-        self.translation_var.set(note.sentence_translation)
-        
-        # Update media info
-        media_info = []
-        if note.word_audio:
-            media_info.append(f"Audio: {note.word_audio}")
-        if note.sentence_audio:
-            media_info.append(f"Sentence Audio: {note.sentence_audio}")
-        if note.image:
-            media_info.append(f"Image: {note.image}")
-        self.media_var.set(" | ".join(media_info))
-        
-        # Update image preview (basic implementation)
-        self.image_label.config(image='', text='')
-        
-        # Update suggested card types
-        suggested_types = note.suggest_card_types()
-        for card_type, var in self.card_type_vars.items():
-            var.set(card_type in suggested_types)
-        
-        # Clear preview
-        self.preview_text.delete(1.0, tk.END)
+        self.progress_label.config(text=f"Progress: {self.current_index + 1}/{len(self.input_data)}")
+        self.progress_bar['value'] = self.current_index + 1
     
-    def generate_preview(self):
-        """Generate and display preview of content"""
-        if not self.notes or self.current_note_index >= len(self.notes):
+    def regenerate_suggestions(self):
+        """Regenerate suggestions for current item"""
+        if not self.input_data or self.current_index >= len(self.input_data):
             return
         
-        note = self.notes[self.current_note_index]
+        data = self.input_data[self.current_index]
         
-        # Get selected card types
-        selected_types = [card_type for card_type, var in self.card_type_vars.items() if var.get()]
+        # Regenerate scrambled sentence with different randomization
+        scrambled = self.create_scrambled_sentence(data['example_sentence'])
+        self.field_vars['scrambled_sentence'].set(scrambled)
         
-        if not selected_types:
-            messagebox.showwarning("Warning", "Please select at least one card type")
+        # Regenerate card type suggestions
+        self.suggest_card_types(data)
+    
+    def previous_item(self):
+        """Go to previous item"""
+        if self.current_index > 0:
+            self.current_index -= 1
+            self.update_display()
+    
+    def skip_item(self):
+        """Skip current item"""
+        if self.current_index < len(self.input_data) - 1:
+            self.current_index += 1
+            self.update_display()
+    
+    def save_and_next(self):
+        """Save current item and go to next"""
+        if not self.input_data or self.current_index >= len(self.input_data):
             return
         
-        # Generate content
-        note.generate_content(selected_types)
+        # Get current data
+        data = self.input_data[self.current_index]
         
-        # Display preview
-        self.preview_text.delete(1.0, tk.END)
+        # Create 17-field output
+        output_row = self.create_output_row(data)
+        self.output_data.append(output_row)
         
-        preview_text = f"Generated content for card types: {', '.join(map(str, selected_types))}\n\n"
-        
-        # Show generated fields
-        output_fields = note.to_output_fields()
-        field_names = [
-            "Word", "Definitions 1", "Definitions 2", "Example Sentence",
-            "Sentence Translation", "Word Audio", "Sentence Audio", "Image",
-            "Cloze Sentence", "Cloze Sentence Pinyin", "Scrambled Sentence",
-            "Scrambled Sentence Pinyin", "Reconstructed Sentence",
-            "Reconstructed Sentence Pinyin", "Prompt", "Word Pinyin",
-            "Example Sentence Pinyin"
-        ]
-        
-        for i, (name, value) in enumerate(zip(field_names, output_fields)):
-            if value:  # Only show non-empty fields
-                preview_text += f"{name}: {value}\n"
-        
-        self.preview_text.insert(1.0, preview_text)
-    
-    def accept_and_next(self):
-        """Accept current note and move to next"""
-        if not self.notes or self.current_note_index >= len(self.notes):
-            return
-        
-        note = self.notes[self.current_note_index]
-        
-        # Get selected card types
-        selected_types = [card_type for card_type, var in self.card_type_vars.items() if var.get()]
-        
-        if not selected_types:
-            messagebox.showwarning("Warning", "Please select at least one card type")
-            return
-        
-        # Generate content
-        note.generate_content(selected_types)
-        
-        # Add to processed notes
-        self.processed_notes.append(note)
-        
-        # Move to next note
-        self.next_note()
-    
-    def skip_note(self):
-        """Skip current note without processing"""
-        self.next_note()
-    
-    def next_note(self):
-        """Move to next note"""
-        if self.current_note_index < len(self.notes) - 1:
-            self.current_note_index += 1
+        # Move to next item
+        if self.current_index < len(self.input_data) - 1:
+            self.current_index += 1
             self.update_display()
         else:
-            messagebox.showinfo("Complete", "All notes processed!")
-            self.toggle_controls(False)
+            messagebox.showinfo("Complete", "All items processed!")
     
-    def previous_note(self):
-        """Move to previous note"""
-        if self.current_note_index > 0:
-            self.current_note_index -= 1
-            self.update_display()
+    def create_output_row(self, data: Dict) -> List[str]:
+        """Create a 17-field output row based on current settings"""
+        # Get selected card types
+        selected_types = [k for k, v in self.card_types.items() if v.get()]
+        
+        # Base fields (always included)
+        row = [
+            data['word'],                           # 1. Word
+            data['definitions1'],                   # 2. Definitions 1
+            data['definitions2'],                   # 3. Definitions 2
+            data['example_sentence'],               # 4. Example Sentence
+            data['sentence_translation'],           # 5. Sentence Translation
+            data['word_audio'],                     # 6. word_audio
+            data['sentence_audio'],                 # 7. sentence_audio
+            data['image'],                          # 8. image
+        ]
+        
+        # Conditional fields based on selected card types
+        cloze_sentence = self.field_vars['cloze_sentence'].get() if 'type3' in selected_types else ''
+        cloze_pinyin = self.generate_pinyin(cloze_sentence) if cloze_sentence else ''
+        
+        scrambled_sentence = self.field_vars['scrambled_sentence'].get() if 'type4' in selected_types else ''
+        scrambled_pinyin = self.generate_pinyin(scrambled_sentence.replace(' / ', '')) if scrambled_sentence else ''
+        
+        reconstructed = data['example_sentence'] if 'type5' in selected_types else ''
+        reconstructed_pinyin = self.field_vars['sentence_pinyin'].get() if 'type5' in selected_types else ''
+        
+        prompt = self.field_vars['prompt'].get() if any(t in selected_types for t in ['type1', 'type2']) else ''
+        
+        # Add remaining fields
+        row.extend([
+            cloze_sentence,                         # 9. cloze_sentence
+            cloze_pinyin,                          # 10. cloze_sentence_pinyin
+            scrambled_sentence,                    # 11. scrambled_sentence
+            scrambled_pinyin,                      # 12. scrambled_sentence_pinyin
+            reconstructed,                         # 13. reconstructed_sentence
+            reconstructed_pinyin,                  # 14. reconstructed_sentence_pinyin
+            prompt,                                # 15. prompt
+            self.word_pinyin_var.get(),            # 16. Word_Pinyin
+            self.field_vars['sentence_pinyin'].get() # 17. Example_Sentence_Pinyin
+        ])
+        
+        return row
     
-    def save_all(self):
-        """Save all processed notes to output file"""
-        if not self.processed_notes:
-            messagebox.showwarning("Warning", "No notes processed yet")
+    def export_data(self):
+        """Export all processed data to output file"""
+        if not self.output_file:
+            messagebox.showerror("Error", "Please select an output file first")
             return
         
-        output_file = self.output_file_var.get()
-        if not output_file:
-            messagebox.showerror("Error", "Please specify an output file")
+        if not self.output_data:
+            messagebox.showerror("Error", "No data to export")
             return
         
         try:
-            with open(output_file, 'w', encoding='utf-8') as f:
-                # Write header
+            with open(self.output_file, 'w', encoding='utf-8') as f:
+                # Write Anki import headers
                 f.write("#separator:tab\n")
                 f.write("#html:true\n")
-                f.write("#tags column:18\n")
                 
-                # Write notes
-                for note in self.processed_notes:
-                    fields = note.to_output_fields()
-                    f.write('\t'.join(fields) + '\n')
+                # Write data rows
+                for row in self.output_data:
+                    f.write('\t'.join(row) + '\n')
             
-            messagebox.showinfo("Success", f"Saved {len(self.processed_notes)} notes to {output_file}")
+            messagebox.showinfo("Success", f"Exported {len(self.output_data)} rows to {self.output_file}")
             
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to save file: {str(e)}")
+            messagebox.showerror("Error", f"Failed to export data: {str(e)}")
     
-    def toggle_controls(self, enabled: bool):
-        """Enable or disable controls based on file load state"""
-        # This is a simplified implementation
-        # In a full implementation, you'd iterate through all controls
-        pass
-
-
-def main():
-    """Main application entry point"""
-    if len(sys.argv) > 1:
-        # Command line mode
-        input_file = sys.argv[1]
-        output_file = sys.argv[2] if len(sys.argv) > 2 else None
-        
-        if not output_file:
-            base_name = os.path.splitext(input_file)[0]
-            output_file = f"{base_name}_processed.txt"
-        
-        print(f"Processing {input_file} -> {output_file}")
-        
-        # Load and process file
-        try:
-            with open(input_file, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-            
-            # Skip header lines
-            data_lines = [line for line in lines if not line.strip().startswith('#') and line.strip()]
-            
-            notes = []
-            for line in data_lines:
-                fields = line.strip().split('\t')
-                if len(fields) >= 1:
-                    note = AnkiNote(fields)
-                    # Auto-select all card types for command line mode
-                    note.generate_content([1, 2, 3, 4, 5])
-                    notes.append(note)
-            
-            # Write output
-            with open(output_file, 'w', encoding='utf-8') as f:
-                f.write("#separator:tab\n")
-                f.write("#html:true\n")
-                f.write("#tags column:18\n")
-                
-                for note in notes:
-                    fields = note.to_output_fields()
-                    f.write('\t'.join(fields) + '\n')
-            
-            print(f"Processed {len(notes)} notes successfully")
-            
-        except Exception as e:
-            print(f"Error: {str(e)}")
-            sys.exit(1)
-    
-    else:
-        # GUI mode
-        root = tk.Tk()
-        app = AnkiProcessorGUI(root)
-        root.mainloop()
-
+    def run(self):
+        """Start the application"""
+        self.root.mainloop()
 
 if __name__ == "__main__":
-    main()
+    app = AnkiCardConverter()
+    app.run()
