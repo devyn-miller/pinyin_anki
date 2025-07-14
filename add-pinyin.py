@@ -449,18 +449,6 @@ class AnkiCardConverter:
         # Get selected card types
         selected_types = [k for k, v in self.card_types.items() if v.get()]
         
-        # Base fields (always included)
-        row = [
-            data['word'],                           # 1. Word
-            data['definitions1'],                   # 2. Definitions 1
-            data['definitions2'],                   # 3. Definitions 2
-            data['example_sentence'],               # 4. Example Sentence
-            data['sentence_translation'],           # 5. Sentence Translation
-            data['word_audio'],                     # 6. word_audio
-            data['sentence_audio'],                 # 7. sentence_audio
-            data['image'],                          # 8. image
-        ]
-        
         # Conditional fields based on selected card types
         cloze_sentence = self.field_vars['cloze_sentence'].get() if 'type3' in selected_types else ''
         cloze_pinyin = self.generate_pinyin(cloze_sentence) if cloze_sentence else ''
@@ -473,18 +461,26 @@ class AnkiCardConverter:
         
         prompt = self.field_vars['prompt'].get() if any(t in selected_types for t in ['type1', 'type2']) else ''
         
-        # Add remaining fields
-        row.extend([
-            cloze_sentence,                         # 9. cloze_sentence
-            cloze_pinyin,                          # 10. cloze_sentence_pinyin
-            scrambled_sentence,                    # 11. scrambled_sentence
-            scrambled_pinyin,                      # 12. scrambled_sentence_pinyin
-            reconstructed,                         # 13. reconstructed_sentence
-            reconstructed_pinyin,                  # 14. reconstructed_sentence_pinyin
-            prompt,                                # 15. prompt
-            self.word_pinyin_var.get(),            # 16. Word_Pinyin
-            self.field_vars['sentence_pinyin'].get() # 17. Example_Sentence_Pinyin
-        ])
+        # Create the 17 fields in the correct order as shown in the Anki field mapping
+        row = [
+            data['word'],                           # 1. Word
+            self.word_pinyin_var.get(),            # 2. Word_Pinyin
+            data['definitions1'],                   # 3. Definitions 1
+            data['definitions2'],                   # 4. Definitions 2
+            data['example_sentence'],               # 5. Example Sentence
+            self.field_vars['sentence_pinyin'].get(), # 6. Example_Sentence_Pinyin
+            data['sentence_translation'],           # 7. Sentence Translation
+            data['word_audio'],                     # 8. word_audio
+            data['sentence_audio'],                 # 9. sentence_audio
+            data['image'],                          # 10. image
+            cloze_sentence,                         # 11. cloze_sentence
+            cloze_pinyin,                          # 12. cloze_sentence_pinyin
+            prompt,                                # 13. prompt
+            scrambled_sentence,                    # 14. scrambled_sentence
+            scrambled_pinyin,                      # 15. scrambled_sentence_pinyin
+            reconstructed,                         # 16. reconstructed_sentence
+            reconstructed_pinyin,                  # 17. reconstructed_sentence_pinyin
+        ]
         
         return row
     
