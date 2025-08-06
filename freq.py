@@ -39,6 +39,7 @@ class ChineseAnkiConverter:
                 {'name': 'Pinyin'},
                 {'name': 'PartOfSpeech'},
                 {'name': 'ChineseExample'},
+                {'name': 'SentencePinyin'},
                 {'name': 'EnglishTranslation'}
             ],
             templates=[
@@ -57,6 +58,7 @@ class ChineseAnkiConverter:
                             <hr>
                             <div class="notes">
                                 <div class="example">{{ChineseExample}}</div>
+                                <div class="sentence-pinyin">{{SentencePinyin}}</div>
                                 <div class="translation">{{EnglishTranslation}}</div>
                             </div>
                         </div>
@@ -116,6 +118,13 @@ class ChineseAnkiConverter:
                     font-size: 16px;
                 }
                 
+                .notes .sentence-pinyin {
+                    font-size: 14px;
+                    color: #666;
+                    font-style: italic;
+                    margin-bottom: 8px;
+                }
+                
                 .notes .translation {
                     font-style: italic;
                     color: #2c5aa0;
@@ -140,6 +149,7 @@ class ChineseAnkiConverter:
             'Chinese Sentence to Word',
             fields=[
                 {'name': 'ChineseSentence'},
+                {'name': 'SentencePinyin'},
                 {'name': 'EnglishTranslation'},
                 {'name': 'Word'},
                 {'name': 'Pinyin'},
@@ -157,6 +167,7 @@ class ChineseAnkiConverter:
                     'afmt': '''
                         <div class="back">
                             <div class="chinese-sentence">{{ChineseSentence}}</div>
+                            <div class="sentence-pinyin">{{SentencePinyin}}</div>
                             <hr>
                             <div class="vocab-info">
                                 <div class="word">{{Word}} ({{Pinyin}})</div>
@@ -190,8 +201,15 @@ class ChineseAnkiConverter:
                     font-size: 28px;
                     color: #d73502;
                     font-weight: bold;
-                    margin-bottom: 15px;
+                    margin-bottom: 5px;
                     line-height: 1.3;
+                }
+                
+                .back .sentence-pinyin {
+                    font-size: 16px;
+                    color: #666;
+                    font-style: italic;
+                    margin-bottom: 15px;
                 }
                 
                 .vocab-info {
@@ -254,11 +272,11 @@ class ChineseAnkiConverter:
         # If word not found, return the original sentence
         return sentence
     
-    def process_mixed_csv_file_with_duplicates(self, csv_path: str) -> None:
-        """Process the CSV file with mixed card types and create Anki cards, allowing duplicates"""
+    def process_csv_with_pinyin(self, csv_path: str) -> None:
+        """Process the CSV file with pinyin sentences and create Anki cards"""
         print(f"Reading CSV file: {csv_path}")
         
-        # Read the CSV file
+        # Read the CSV file without headers
         df = pd.read_csv(csv_path, header=None)
         
         # Check if file has content
@@ -270,75 +288,64 @@ class ChineseAnkiConverter:
         word_entries = []
         sentence_entries = []
         
-        print("Processing mixed CSV file...")
+        print("Processing CSV file with pinyin...")
         row_count = len(df)
         print(f"Found {row_count} rows in the CSV file")
         
         # Process all rows and collect data
-        for index, row in df.iterrows():
+        for i in range(0, len(df), 2):  # Process every other row (definition cards)
             try:
                 self.processed_rows += 1
                 
-                # Check if this is a definition card or a sentence card
-                if len(row) >= 6:  # Ensure we have enough columns
-                    if index % 2 == 0:  # Definition card (even rows)
-                        meaning = str(row[0]).strip()
-                        word = str(row[1]).strip()
-                        pinyin = str(row[2]).strip()
-                        part_of_speech = str(row[3]).strip()
-                        chinese_example = str(row[4]).strip()
-                        
-                        # Skip empty or invalid rows
-                        if not word or word == 'nan':
-                            reason = "Empty word"
-                            self.skipped_rows += 1
-                            self.skipped_reasons[reason] = self.skipped_reasons.get(reason, 0) + 1
-                            continue
-                        
-                        # Add to word entries list
-                        word_entries.append({
-                            'meaning': meaning,
-                            'word': word,
-                            'pinyin': pinyin,
-                            'part_of_speech': part_of_speech,
-                            'chinese_example': chinese_example,
-                            'english_translation': ''  # Will be filled in next row
-                        })
-                    else:  # Sentence card (odd rows)
-                        chinese_sentence = str(row[0]).strip()
-                        english_translation = str(row[1]).strip()
-                        word = str(row[2]).strip()
-                        pinyin = str(row[3]).strip()
-                        part_of_speech = str(row[4]).strip()
-                        meaning = str(row[5]).strip()
-                        
-                        # Skip empty or invalid rows
-                        if not chinese_sentence or chinese_sentence == 'nan' or not word or word == 'nan':
-                            reason = "Empty sentence or word"
-                            self.skipped_rows += 1
-                            self.skipped_reasons[reason] = self.skipped_reasons.get(reason, 0) + 1
-                            continue
-                        
-                        # Update the corresponding word entry with the translation
-                        if word_entries and index > 0:
-                            word_entries[-1]['english_translation'] = english_translation
-                        
-                        # Add to sentence entries list
-                        sentence_entries.append({
-                            'chinese_sentence': chinese_sentence,
-                            'english_translation': english_translation,
-                            'word': word,
-                            'pinyin': pinyin,
-                            'part_of_speech': part_of_speech,
-                            'meaning': meaning
-                        })
-                else:
-                    reason = f"Row {index+1} has insufficient columns: {len(row)}"
+                # Skip if there's no matching sentence row
+                if i+1 >= len(df):
+                    continue
+                
+                # Get data from definition card (even row)
+                meaning = str(df.iloc[i, 0]).strip()
+                word = str(df.iloc[i, 1]).strip()
+                # Column 2 is empty for definition rows
+                pinyin = str(df.iloc[i, 4]).strip()  # Fixed: Pinyin is in column 4
+                part_of_speech = str(df.iloc[i, 5]).strip()  # Fixed: Part of speech is in column 5
+                chinese_example = str(df.iloc[i, 6]).strip()  # Fixed: Example is in column 6
+                
+                # Skip empty or invalid rows
+                if not word or word == 'nan':
+                    reason = "Empty word"
                     self.skipped_rows += 1
                     self.skipped_reasons[reason] = self.skipped_reasons.get(reason, 0) + 1
+                    continue
+                
+                # Get data from sentence card (odd row)
+                chinese_sentence = str(df.iloc[i+1, 0]).strip()
+                english_translation = str(df.iloc[i+1, 1]).strip()
+                sentence_pinyin = str(df.iloc[i+1, 2]).strip()
+                
+                # Add to word entries list
+                word_entries.append({
+                    'meaning': meaning,
+                    'word': word,
+                    'pinyin': pinyin,
+                    'part_of_speech': part_of_speech,
+                    'chinese_example': chinese_example,
+                    'sentence_pinyin': sentence_pinyin,
+                    'english_translation': english_translation
+                })
+                
+                # Add to sentence entries list
+                sentence_entries.append({
+                    'chinese_sentence': chinese_sentence,
+                    'sentence_pinyin': sentence_pinyin,
+                    'english_translation': english_translation,
+                    'word': word,
+                    'pinyin': pinyin,
+                    'part_of_speech': part_of_speech,
+                    'meaning': meaning
+                })
+                
             except Exception as e:
                 self.error_rows += 1
-                print(f"Error processing row {index + 1}: {e}")
+                print(f"Error processing row {i}: {e}")
                 continue
         
         print(f"Collected {len(word_entries)} word entries")
@@ -363,6 +370,7 @@ class ChineseAnkiConverter:
                         entry['pinyin'],  # Pinyin
                         entry['part_of_speech'],  # Part of Speech
                         formatted_example,  # Chinese Example with formatting
+                        entry['sentence_pinyin'],  # Sentence Pinyin
                         entry['english_translation']  # English Translation
                     ]
                 )
@@ -382,6 +390,7 @@ class ChineseAnkiConverter:
                     model=self.sentence_model,
                     fields=[
                         formatted_sentence,  # Chinese Sentence with formatting
+                        entry['sentence_pinyin'],  # Sentence Pinyin
                         entry['english_translation'],  # English Translation
                         entry['word'],  # Word
                         entry['pinyin'],  # Pinyin
@@ -423,7 +432,7 @@ class ChineseAnkiConverter:
         print("=== Chinese Vocabulary to Anki Converter ===")
         
         try:
-            self.process_mixed_csv_file_with_duplicates(csv_path)
+            self.process_csv_with_pinyin(csv_path)
             self.export_deck(output_path)
             
             print(f"\n✅ Success! Created Anki deck with {len(self.deck.notes)} cards")
@@ -437,7 +446,7 @@ def main():
     converter = ChineseAnkiConverter()
     
     # Specify your file paths
-    csv_file = "chiense two types - Chinese Vocabulary.csv"  # Use the uploaded CSV file
+    csv_file = "chinese_vocab_with_pinyin.csv"  # Use the CSV file with pinyin
     output_file = "chinese_vocabulary_deck.apkg"  # Output Anki deck file
     
     # Convert
