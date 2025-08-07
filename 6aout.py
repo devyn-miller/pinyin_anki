@@ -58,9 +58,9 @@ class AnkiCardGenerator:
                         <div class="audio-controls">
                             <div class="audio-label">Word:</div>
                             <div class="audio-buttons">
-                                <button onclick="playTTS('{{Hanzi}}', 1.0)">▶️ Normal</button>
-                                <button onclick="playTTS('{{Hanzi}}', 0.7)">🐢 Slow</button>
-                                <button onclick="playTTS('{{Hanzi}}', 0.5)">🐌 Very Slow</button>
+                                <button onclick="playTTS(this.getAttribute('data-text'), 1.0)" data-text="{{text:Hanzi}}">▶️ Normal</button>
+                                <button onclick="playTTS(this.getAttribute('data-text'), 0.7)" data-text="{{text:Hanzi}}">🐢 Slow</button>
+                                <button onclick="playTTS(this.getAttribute('data-text'), 0.5)" data-text="{{text:Hanzi}}">🐌 Very Slow</button>
                             </div>
                         </div>
                         {{#ExampleHanzi}}
@@ -72,9 +72,9 @@ class AnkiCardGenerator:
                             <div class="audio-controls">
                                 <div class="audio-label">Example:</div>
                                 <div class="audio-buttons">
-                                    <button onclick="playTTS('{{ExampleHanzi}}', 1.0)">▶️ Normal</button>
-                                    <button onclick="playTTS('{{ExampleHanzi}}', 0.7)">🐢 Slow</button>
-                                    <button onclick="playTTS('{{ExampleHanzi}}', 0.5)">🐌 Very Slow</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 1.0)" data-text="{{text:ExampleHanzi}}">▶️ Normal</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 0.7)" data-text="{{text:ExampleHanzi}}">🐢 Slow</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 0.5)" data-text="{{text:ExampleHanzi}}">🐌 Very Slow</button>
                                 </div>
                             </div>
                         </div>
@@ -89,14 +89,29 @@ class AnkiCardGenerator:
                         <!-- JavaScript for custom TTS playback with speed control -->
                         <script>
                             function playTTS(text, speed) {
+                                if (!text) return;
+                                
+                                // Sanitize the text - remove HTML tags and decode HTML entities
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = text;
+                                const sanitizedText = tempDiv.textContent || tempDiv.innerText || '';
+                                
+                                // Remove highlight spans that might be in the text
+                                const cleanText = sanitizedText.replace(/\s+/g, ' ').trim();
+                                
+                                console.log('Playing TTS:', cleanText);
+                                
                                 // Create a speechSynthesis utterance
-                                const utterance = new SpeechSynthesisUtterance(text);
+                                const utterance = new SpeechSynthesisUtterance(cleanText);
                                 
                                 // Set language to Mandarin Chinese
                                 utterance.lang = 'zh-CN';
                                 
                                 // Set the speech rate
                                 utterance.rate = speed;
+                                
+                                // Cancel any ongoing speech
+                                window.speechSynthesis.cancel();
                                 
                                 // Speak the utterance
                                 window.speechSynthesis.speak(utterance);
@@ -146,7 +161,7 @@ class AnkiCardGenerator:
             }
             .audio-label {
                 font-weight: bold;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
                 color: #333;
             }
             .audio-buttons {
@@ -163,10 +178,18 @@ class AnkiCardGenerator:
                 padding: 8px 12px;
                 cursor: pointer;
                 font-size: 14px;
-                transition: background-color 0.2s;
+                transition: all 0.2s;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                min-width: 100px;
             }
             .audio-buttons button:hover {
                 background-color: #1A6A8F;
+                transform: translateY(-1px);
+                box-shadow: 0 3px 5px rgba(0,0,0,0.15);
+            }
+            .audio-buttons button:active {
+                transform: translateY(1px);
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             }
             .example-section {
                 background-color: #f5f5f5;
@@ -223,9 +246,9 @@ class AnkiCardGenerator:
                         
                         <div class="audio-controls">
                             <div class="audio-buttons">
-                                <button onclick="playTTS('{{ChineseSentence}}', 1.0)">▶️ Normal</button>
-                                <button onclick="playTTS('{{ChineseSentence}}', 0.7)">🐢 Slow</button>
-                                <button onclick="playTTS('{{ChineseSentence}}', 0.5)">🐌 Very Slow</button>
+                                <button onclick="playTTS(this.getAttribute('data-text'), 1.0)" data-text="{{text:ChineseSentence}}">▶️ Normal</button>
+                                <button onclick="playTTS(this.getAttribute('data-text'), 0.7)" data-text="{{text:ChineseSentence}}">🐢 Slow</button>
+                                <button onclick="playTTS(this.getAttribute('data-text'), 0.5)" data-text="{{text:ChineseSentence}}">🐌 Very Slow</button>
                             </div>
                         </div>
                         
@@ -237,14 +260,29 @@ class AnkiCardGenerator:
                         <!-- JavaScript for custom TTS playback with speed control -->
                         <script>
                             function playTTS(text, speed) {
+                                if (!text) return;
+                                
+                                // Sanitize the text - remove HTML tags and decode HTML entities
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = text;
+                                const sanitizedText = tempDiv.textContent || tempDiv.innerText || '';
+                                
+                                // Remove highlight spans that might be in the text
+                                const cleanText = sanitizedText.replace(/\s+/g, ' ').trim();
+                                
+                                console.log('Playing TTS:', cleanText);
+                                
                                 // Create a speechSynthesis utterance
-                                const utterance = new SpeechSynthesisUtterance(text);
+                                const utterance = new SpeechSynthesisUtterance(cleanText);
                                 
                                 // Set language to Mandarin Chinese
                                 utterance.lang = 'zh-CN';
                                 
                                 // Set the speech rate
                                 utterance.rate = speed;
+                                
+                                // Cancel any ongoing speech
+                                window.speechSynthesis.cancel();
                                 
                                 // Speak the utterance
                                 window.speechSynthesis.speak(utterance);
@@ -261,9 +299,9 @@ class AnkiCardGenerator:
                             
                             <div class="audio-controls">
                                 <div class="audio-buttons">
-                                    <button onclick="playTTS('{{ChineseSentence}}', 1.0)">▶️ Normal</button>
-                                    <button onclick="playTTS('{{ChineseSentence}}', 0.7)">🐢 Slow</button>
-                                    <button onclick="playTTS('{{ChineseSentence}}', 0.5)">🐌 Very Slow</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 1.0)" data-text="{{text:ChineseSentence}}">▶️ Normal</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 0.7)" data-text="{{text:ChineseSentence}}">🐢 Slow</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 0.5)" data-text="{{text:ChineseSentence}}">🐌 Very Slow</button>
                                 </div>
                             </div>
                         </div>
@@ -279,9 +317,9 @@ class AnkiCardGenerator:
                             <div class="audio-controls">
                                 <div class="audio-label">Target Word:</div>
                                 <div class="audio-buttons">
-                                    <button onclick="playTTS('{{TargetWord}}', 1.0)">▶️ Normal</button>
-                                    <button onclick="playTTS('{{TargetWord}}', 0.7)">🐢 Slow</button>
-                                    <button onclick="playTTS('{{TargetWord}}', 0.5)">🐌 Very Slow</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 1.0)" data-text="{{text:TargetWord}}">▶️ Normal</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 0.7)" data-text="{{text:TargetWord}}">🐢 Slow</button>
+                                    <button onclick="playTTS(this.getAttribute('data-text'), 0.5)" data-text="{{text:TargetWord}}">🐌 Very Slow</button>
                                 </div>
                             </div>
                             {{/TargetWord}}
@@ -296,14 +334,29 @@ class AnkiCardGenerator:
                         <!-- JavaScript for custom TTS playback with speed control -->
                         <script>
                             function playTTS(text, speed) {
+                                if (!text) return;
+                                
+                                // Sanitize the text - remove HTML tags and decode HTML entities
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = text;
+                                const sanitizedText = tempDiv.textContent || tempDiv.innerText || '';
+                                
+                                // Remove highlight spans that might be in the text
+                                const cleanText = sanitizedText.replace(/\s+/g, ' ').trim();
+                                
+                                console.log('Playing TTS:', cleanText);
+                                
                                 // Create a speechSynthesis utterance
-                                const utterance = new SpeechSynthesisUtterance(text);
+                                const utterance = new SpeechSynthesisUtterance(cleanText);
                                 
                                 // Set language to Mandarin Chinese
                                 utterance.lang = 'zh-CN';
                                 
                                 // Set the speech rate
                                 utterance.rate = speed;
+                                
+                                // Cancel any ongoing speech
+                                window.speechSynthesis.cancel();
                                 
                                 // Speak the utterance
                                 window.speechSynthesis.speak(utterance);
@@ -349,7 +402,7 @@ class AnkiCardGenerator:
             }
             .audio-label {
                 font-weight: bold;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
                 color: #333;
             }
             .audio-buttons {
@@ -366,10 +419,18 @@ class AnkiCardGenerator:
                 padding: 8px 12px;
                 cursor: pointer;
                 font-size: 14px;
-                transition: background-color 0.2s;
+                transition: all 0.2s;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                min-width: 100px;
             }
             .audio-buttons button:hover {
                 background-color: #1A6A8F;
+                transform: translateY(-1px);
+                box-shadow: 0 3px 5px rgba(0,0,0,0.15);
+            }
+            .audio-buttons button:active {
+                transform: translateY(1px);
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             }
             .word-info {
                 background-color: #f5f5f5;
@@ -447,6 +508,12 @@ class AnkiCardGenerator:
             )
         
         return highlighted_text
+        
+    def strip_html(self, text: str) -> str:
+        """Remove HTML tags from text"""
+        if not text:
+            return ""
+        return re.sub(r'<[^>]+>', '', text)
 
     def create_type1_card(self, row: List[str]) -> Optional[genanki.Note]:
         """Create Type 1 card: Definition → Word"""
