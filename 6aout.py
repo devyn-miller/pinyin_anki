@@ -3,7 +3,7 @@
 CSV to Anki Cards Generator
 Converts CSV files with Chinese language learning data into Anki .apkg files
 Supports two card types: Definition→Word and Sentence→English+Word Info
-Features built-in TTS for Chinese audio
+Uses Anki's built-in TTS for Chinese audio
 """
 
 import csv
@@ -18,11 +18,10 @@ import os  # Needed for path operations
 
 
 class AnkiCardGenerator:
-    def __init__(self, deck_name: str = "Chinese Learning Deck", chunk_size: int = 20, use_tts: bool = True):
+    def __init__(self, deck_name: str = "Chinese Learning Deck", chunk_size: int = 20):
         self.deck_name = deck_name
         self.chunk_size = chunk_size
         self.deck_id = random.randrange(1 << 30, 1 << 31)
-        self.use_tts = use_tts
         
         # Define card models
         self.type1_model = genanki.Model(
@@ -36,7 +35,6 @@ class AnkiCardGenerator:
                 {'name': 'ExampleHanzi'},
                 {'name': 'ExampleEnglish'},
                 {'name': 'ExamplePinyin'},
-                {'name': 'Audio'},  # TTS field
             ],
             templates=[
                 {
@@ -51,11 +49,9 @@ class AnkiCardGenerator:
                         <div class="hanzi">{{Hanzi}}</div>
                         <div class="pinyin">{{Pinyin}}</div>
                         <div class="pos">{{POS}}</div>
-                        {{#Audio}}
                         <div class="audio-container">
-                            {{Audio}}
+                            {{tts zh_CN:Hanzi}}
                         </div>
-                        {{/Audio}}
                         {{#ExampleHanzi}}
                         <hr>
                         <div class="example-section">
@@ -141,7 +137,6 @@ class AnkiCardGenerator:
                 {'name': 'TargetPinyin'},
                 {'name': 'POS'},
                 {'name': 'Meaning'},
-                {'name': 'Audio'},  # TTS field
             ],
             templates=[
                 {
@@ -155,11 +150,9 @@ class AnkiCardGenerator:
                     'afmt': '''
                     <div class="back">
                         <div class="english-translation">{{EnglishTranslation}}</div>
-                        {{#Audio}}
                         <div class="audio-container">
-                            {{Audio}}
+                            {{tts zh_CN:ChineseSentence}}
                         </div>
-                        {{/Audio}}
                         <hr>
                         <div class="word-info">
                             <div class="target-word">{{TargetWord}} ({{TargetPinyin}})</div>
@@ -296,12 +289,6 @@ class AnkiCardGenerator:
             # Clean up pinyin field - remove tone numbers if using diacritics
             pinyin = self.clean_pinyin(pinyin)
             
-            # Generate TTS reference if audio is enabled
-            audio_ref = ""
-            if self.use_tts and hanzi:
-                # Generate TTS from hanzi
-                audio_ref = self.generate_audio_reference(hanzi, is_word=True)
-            
             # Highlight target word in examples if available
             if example_hanzi and hanzi:
                 example_hanzi = self.highlight_word_in_text(example_hanzi, hanzi)
@@ -323,7 +310,6 @@ class AnkiCardGenerator:
                     example_hanzi,
                     example_english,
                     example_pinyin,
-                    audio_ref,  # TTS reference
                 ]
             )
             return note
@@ -367,16 +353,6 @@ class AnkiCardGenerator:
                     target_word = max(words, key=len)
                     logging.info(f"Auto-detected target word: {target_word}")
             
-            # Generate TTS reference if audio is enabled
-            audio_ref = ""
-            if self.use_tts:
-                # Generate TTS from Chinese sentence
-                audio_ref = self.generate_audio_reference(chinese_sentence, is_word=False)
-                
-                # If we don't have a sentence but have a target word, use that
-                if not audio_ref and target_word:
-                    audio_ref = self.generate_audio_reference(target_word, is_word=True)
-            
             # Highlight target word in Chinese sentence
             if target_word:
                 chinese_sentence = self.highlight_word_in_text(chinese_sentence, target_word)
@@ -395,7 +371,6 @@ class AnkiCardGenerator:
                     target_pinyin,
                     pos,
                     meaning,
-                    audio_ref,  # TTS reference
                 ]
             )
             return note
@@ -417,40 +392,6 @@ class AnkiCardGenerator:
         # Otherwise leave as is - could be number notation
         return pinyin_text
         
-    def generate_audio_reference(self, text: str, is_word: bool = True) -> str:
-        """
-        Generate audio reference for Anki cards using TTS syntax
-        
-        Args:
-            text: Chinese characters to be spoken by TTS
-            is_word: Whether this is a single word (True) or a sentence (False)
-            
-        Returns:
-            String with Anki TTS syntax like {{tts zh_CN:你好}}
-        """
-        if not text:
-            return ""
-            
-        # If text is not Chinese characters, try to find Chinese in it
-        if not self.contains_hanzi(text):
-            # If no Chinese characters, we can't generate TTS
-            logging.warning(f"No Chinese characters found in text: {text}")
-            return ""
-            
-        # Extract only the Chinese characters and some punctuation
-        chinese_text = ''.join(re.findall(r'[\u4e00-\u9fff，。！？]', text))
-        
-        if not chinese_text:
-            return ""
-            
-        # For sentences, don't limit the length - TTS can handle full sentences
-        
-        # Generate TTS reference using Anki's syntax
-        # Use zh_CN for Mandarin Chinese
-        tts_ref = f"{{{{tts zh_CN:{chinese_text}}}}}"
-        
-        return tts_ref
-
     def process_csv(self, csv_file_path: str) -> None:
         """Process CSV file and create Anki cards"""
         logging.info(f"Processing CSV file: {csv_file_path}")
@@ -705,10 +646,6 @@ def main():
                        help='Enable verbose logging')
     parser.add_argument('--debug', action='store_true',
                        help='Enable debug mode with additional validation')
-    parser.add_argument('--tts', action='store_true', default=True,
-                       help='Enable TTS for Chinese audio (default: enabled)')
-    parser.add_argument('--no-tts', action='store_false', dest='audio',
-                       help='Disable TTS audio')
     
     args = parser.parse_args()
     
@@ -721,7 +658,7 @@ def main():
     
     try:
         # Create card generator with chunk size
-        generator = AnkiCardGenerator(args.deck_name, args.chunk_size, args.audio)
+        generator = AnkiCardGenerator(args.deck_name, args.chunk_size)
         
         # Process CSV file
         generator.process_csv(args.csv_file)
@@ -743,20 +680,12 @@ def main():
             else:
                 logging.info("All cards passed validation checks.")
         
-        # If audio is disabled, remove audio fields from notes
-        if not args.audio:
-            logging.info("TTS disabled, removing audio fields from cards")
-            for note in generator.notes:
-                if len(note.fields) > 7:
-                    note.fields[7] = ""  # Clear audio field
-        
         # Export deck (chunked shuffling applied automatically)
         generator.export_deck(args.output)
         
         print(f"✅ Successfully created {generator.cards_created} cards")
         print(f"🔀 Applied chunked shuffling (chunk size: {args.chunk_size})")
-        if args.audio:
-            print(f"🔊 TTS audio enabled for Chinese")
+        print(f"🔊 Built-in Anki TTS enabled for Chinese")
         if generator.rows_skipped > 0:
             print(f"⚠️  Skipped {generator.rows_skipped} invalid rows")
         
